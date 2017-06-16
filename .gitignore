@@ -17,3 +17,6 @@ _book
 
 # pycharm
 .idea/*
+
+# Log
+*log.txt
