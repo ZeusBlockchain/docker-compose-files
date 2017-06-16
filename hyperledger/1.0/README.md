@@ -43,7 +43,7 @@ $ bash scripts/start_fabric.sh
 or
 
 ```sh
-$ docker-compose -f docker-compose-2orgs-4peers.yaml up
+$ docker-compose -f docker-compose-2orgs-4peers.yaml up -d
 ```
 
 Check the output log that the peer is connected to the ca and orderer successfully.
@@ -276,7 +276,7 @@ Query Result: 100
 ```
 
 ```bash
-$ peer chaincode query -C ${CHANNEL_NAME} -n mycc -c '{"Args":["query","a"]}'
+$ peer chaincode query -C ${CHANNEL_NAME} -n mycc -c '{"Args":["query","b"]}'
 ```
 
 The result may look like following, with a payload value of `200`.
