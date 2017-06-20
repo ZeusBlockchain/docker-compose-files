@@ -66,8 +66,32 @@ chaincodeQuery () {
   fi
 }
 
+chaincodeQueryNoVerification () {
+  PEER=$1
+  echo_b "===================== Querying on PEER$PEER on channel '$CHANNEL_NAME'... ===================== "
+  setGlobals $PEER
+  local starttime=$(date +%s)
+
+  # continue to poll
+  # we either get a successful response, or reach TIMEOUT
+  echo_b "Attempting to Query PEER$PEER ...$(($(date +%s)-starttime)) secs"
+  peer chaincode query -C $CHANNEL_NAME -n mycc -c '{"Args":["query","'$2'"]}' >&log.txt
+  test $? -eq 0 && VALUE=$(cat log.txt | awk '/Query Result/ {print $NF}')
+  echo
+  cat log.txt
+}
+
+
 #Query on chaincode on Peer0/Org1
-echo_b "Querying chaincode on org1/peer0..."
-chaincodeQuery 2 "$1" "$2"
+if [ -z "$2" ]
+  then
+	  echo "1"
+	  echo_b "Querying chaincode on org1/peer0..."
+	  chaincodeQueryNoVerification 2 "$1"
+  else
+	  echo "2"
+	  echo_b "Querying chaincode on org1/peer0..."
+	  chaincodeQuery 2 "$1" "$2"
+fi
 
 exit 0
