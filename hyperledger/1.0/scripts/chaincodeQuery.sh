@@ -2,9 +2,8 @@
 
 source scripts/header.sh
 
-CHANNEL_NAME="$1"
-: ${CHANNEL_NAME:="businesschannel"}
-: ${TIMEOUT:="60"}
+CHANNEL_NAME="businesschannel"
+: ${TIMEOUT:="10"}
 COUNTER=1
 MAX_RETRY=5
 ORDERER_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/cacerts/ca.example.com-cert.pem
@@ -69,6 +68,6 @@ chaincodeQuery () {
 
 #Query on chaincode on Peer0/Org1
 echo_b "Querying chaincode on org1/peer0..."
-chaincodeQuery 2 $2
+chaincodeQuery 2 "$1"
 
 exit 0
