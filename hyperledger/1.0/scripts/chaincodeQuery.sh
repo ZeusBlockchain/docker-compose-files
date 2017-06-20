@@ -85,11 +85,9 @@ chaincodeQueryNoVerification () {
 #Query on chaincode on Peer0/Org1
 if [ -z "$2" ]
   then
-	  echo "1"
 	  echo_b "Querying chaincode on org1/peer0..."
 	  chaincodeQueryNoVerification 2 "$1"
   else
-	  echo "2"
 	  echo_b "Querying chaincode on org1/peer0..."
 	  chaincodeQuery 2 "$1" "$2"
 fi
