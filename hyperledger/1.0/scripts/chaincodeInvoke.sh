@@ -28,10 +28,12 @@ function chaincodeInvoke () {
     echo
 }
 
-echo_b "Invoking org1/peer0..."
-if [ -z "$4" ]; then
+if [ "$#" -eq 3 ]; then
+    echo_b "Invoke:\t"$1"-->"$3"-->"$2
     chaincodeInvoke 2 "$1" "$2" "$3"
 else
+    echo_b "Running with default parameters..."
+    echo_b "Invoke:\ta-->10-->b"
     chaincodeInvoke 2 a b 10
 fi
 

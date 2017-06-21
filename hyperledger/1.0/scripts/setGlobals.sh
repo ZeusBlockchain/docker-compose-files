@@ -29,5 +29,5 @@ function setGlobals () {
 			CORE_PEER_ADDRESS=peer1.org2.example.com:7051
 		fi
 	fi
-	env |grep CORE
+	# env |grep CORE
 }
