@@ -4,14 +4,6 @@ source scripts/setGlobals.sh
 
 echo_b "Channel name : "$CHANNEL_NAME
 
-function verifyResult () {
-    if [ $1 -ne 0 ] ; then
-        echo_b "!!!!!!!!!!!!!!! "$2" !!!!!!!!!!!!!!!!"
-        echo_r "================== ERROR !!! FAILED to execute End-2-End Scenario =================="
-        echo
-        exit 1
-    fi
-}
 
 function chaincodeInvoke () {
     PEER=$1
