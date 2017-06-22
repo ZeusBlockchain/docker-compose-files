@@ -22,22 +22,17 @@ add () {
 }
 
 
-# Instantiate chaincode on Peer0/Org2
-# Instantiate can only be executed once on any node
-echo_b "Instantiating chaincode on peer0/org2..."
+if [ "$#" -ne 2 ]; then
+	echo_r "=========================== Usage: add variable value =========================== "
+    echo_r "e.g. add b 10"
+    exit 1
+fi
+
+echo_b "Add:\t"$1"("$2")"
 add 2 "$1" "$2"
 
-
 echo
-echo_g "===================== All GOOD, initialization completed ===================== "
-echo
-
-echo
-echo " _____   _   _   ____  "
-echo "| ____| | \ | | |  _ \ "
-echo "|  _|   |  \| | | | | |"
-echo "| |___  | |\  | | |_| |"
-echo "|_____| |_| \_| |____/ "
+echo_g "================================== Added "$2" to "$1" ================================== "
 echo
 
 exit 0

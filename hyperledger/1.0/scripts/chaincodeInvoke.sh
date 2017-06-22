@@ -20,13 +20,18 @@ function chaincodeInvoke () {
     echo
 }
 
-if [ "$#" -eq 3 ]; then
-    echo_b "Invoke:\t"$1"-->"$3"-->"$2
-    chaincodeInvoke 2 "$1" "$2" "$3"
-else
-    echo_b "Running with default parameters..."
-    echo_b "Invoke:\ta-->10-->b"
-    chaincodeInvoke 2 a b 10
+
+if [ "$#" -ne 3 ]; then
+    echo_r "=========================== Usage: invoke from_var to_var value =========================== "
+    echo_r "e.g. invoke a b 10"
+    exit 1
 fi
+
+echo_b "Invoke:\t"$1"-->"$3"-->"$2
+chaincodeInvoke 2 "$1" "$2" "$3"
+
+echo
+echo_g "============================= Invoked from "$1" to "$2" "$3" ============================="
+echo
 
 exit 0
