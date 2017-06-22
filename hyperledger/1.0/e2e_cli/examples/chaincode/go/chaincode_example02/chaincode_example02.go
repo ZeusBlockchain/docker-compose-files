@@ -138,7 +138,10 @@ func (t *SimpleChaincode) invoke(stub shim.ChaincodeStubInterface, args []string
 	if Avalbytes == nil {
 		return shim.Error("Entity not found")
 	}
-	Aval, _ = strconv.Atoi(string(Avalbytes))
+	Aval, err = strconv.Atoi(string(Avalbytes))
+	if err != nil {
+		return shim.Error("Invalid state, expecting a integer value for "+A)
+	}
 
 	Bvalbytes, err := stub.GetState(B)
 	if err != nil {
@@ -147,7 +150,10 @@ func (t *SimpleChaincode) invoke(stub shim.ChaincodeStubInterface, args []string
 	if Bvalbytes == nil {
 		return shim.Error("Entity not found")
 	}
-	Bval, _ = strconv.Atoi(string(Bvalbytes))
+	Bval, err = strconv.Atoi(string(Bvalbytes))
+	if err != nil {
+		return shim.Error("Invalid state, expecting a integer value for "+B)
+	}
 
 	// Perform the execution
 	X, err = strconv.Atoi(args[2])
