@@ -7,6 +7,7 @@ echo " ============================================== "
 echo
 
 source scripts/header.sh
+source cc_operations/setGlobals.sh
 
 CHANNEL_NAME="$1"
 : ${CHANNEL_NAME:="businesschannel"}
@@ -17,45 +18,9 @@ ORDERER_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrga
 
 echo_b "Channel name : "$CHANNEL_NAME
 
-verifyResult () {
-	if [ $1 -ne 0 ] ; then
-		echo_b "!!!!!!!!!!!!!!! "$2" !!!!!!!!!!!!!!!!"
-                echo_r "================== ERROR !!! FAILED to execute End-2-End Scenario =================="
-		echo
-   		exit 1
-	fi
-}
-
-setGlobals () {
-
-	if [ $1 -eq 0 -o $1 -eq 1 ] ; then
-		CORE_PEER_LOCALMSPID="Org1MSP"
-		CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
-		CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
-		if [ $1 -eq 0 ]; then
-			CORE_PEER_ADDRESS=peer0.org1.example.com:7051
-		else
-			CORE_PEER_ADDRESS=peer1.org1.example.com:7051
-			CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
-		fi
-	else
-		CORE_PEER_LOCALMSPID="Org2MSP"
-		CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt
-		CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp
-		if [ $1 -eq 2 ]; then
-			CORE_PEER_ADDRESS=peer0.org2.example.com:7051
-		else
-			CORE_PEER_ADDRESS=peer1.org2.example.com:7051
-		fi
-	fi
-
-	env |grep CORE
-}
-
 createChannel() {
 	setGlobals 0
-
-        if [ -z "$CORE_PEER_TLS_ENABLED" -o "$CORE_PEER_TLS_ENABLED" = "false" ]; then
+    if [ -z "$CORE_PEER_TLS_ENABLED" -o "$CORE_PEER_TLS_ENABLED" = "false" ]; then
 		peer channel create -o orderer.example.com:7050 -c $CHANNEL_NAME -f ./channel-artifacts/channel.tx >&log.txt
 	else
 		peer channel create -o orderer.example.com:7050 -c $CHANNEL_NAME -f ./channel-artifacts/channel.tx --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA >&log.txt
@@ -68,10 +33,10 @@ createChannel() {
 }
 
 updateAnchorPeers() {
-        PEER=$1
-        setGlobals $PEER
+    PEER=$1
+    setGlobals $PEER
 
-        if [ -z "$CORE_PEER_TLS_ENABLED" -o "$CORE_PEER_TLS_ENABLED" = "false" ]; then
+    if [ -z "$CORE_PEER_TLS_ENABLED" -o "$CORE_PEER_TLS_ENABLED" = "false" ]; then
 		peer channel update -o orderer.example.com:7050 -c $CHANNEL_NAME -f ./channel-artifacts/${CORE_PEER_LOCALMSPID}anchors.tx >&log.txt
 	else
 		peer channel update -o orderer.example.com:7050 -c $CHANNEL_NAME -f ./channel-artifacts/${CORE_PEER_LOCALMSPID}anchors.tx --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA >&log.txt
@@ -115,7 +80,7 @@ installChaincode () {
 	peer chaincode install -n mycc -v 1.0 -p github.com/hyperledger/fabric/examples/chaincode/go/zeus_chaincode >&log.txt
 	res=$?
 	cat log.txt
-        verifyResult $res "Chaincode installation on remote peer PEER$PEER has Failed"
+    verifyResult $res "Chaincode installation on remote peer PEER$PEER has Failed"
 	echo_g "===================== Chaincode is installed on remote peer PEER$PEER ===================== "
 	echo
 }

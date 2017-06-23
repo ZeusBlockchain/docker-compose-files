@@ -19,7 +19,7 @@ function setGlobals () {
 			CORE_PEER_ADDRESS=peer1.org1.example.com:7051
 			CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
 		fi
-	else
+	elif [ $1 -eq 2 -o $1 -eq 3 ] ; then # peer 2, 3
 		CORE_PEER_LOCALMSPID="Org2MSP"
 		CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt
 		CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp
@@ -28,7 +28,19 @@ function setGlobals () {
 		else
 			CORE_PEER_ADDRESS=peer1.org2.example.com:7051
 		fi
-	fi
+	# else # peer 4, 5
+ #        CORE_PEER_LOCALMSPID="Org3MSP"
+ #        CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org3.example.com/peers/peer0.org3.example.com/tls/ca.crt
+ #        CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org3.example.com/users/Admin@org3.example.com/msp
+ #        if [ $1 -eq 4 ]; then
+ #            CORE_PEER_ADDRESS=peer0.org3.example.com:7051
+ #        else
+ #            CORE_PEER_ADDRESS=peer1.org3.example.com:7051
+ #        fi
+    fi
+
+
+
 	# env |grep CORE
 }
 
