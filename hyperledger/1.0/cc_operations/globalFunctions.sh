@@ -53,7 +53,7 @@ function verifyResult () {
     fi
 }
 
-set () {
+function set () {
 	PEER=$1
 	setGlobals $PEER
 	# while 'peer chaincode' command can get the orderer endpoint from the peer (if join was successful),
@@ -112,4 +112,9 @@ function chaincodeQueryNoVerification () {
     test $? -eq 0 && VALUE=$(cat log.txt | awk '/Query Result/ {print $NF}')
     echo
     cat log.txt
+}
+
+function set_verify () {
+	set 2 "$1" "$2"
+	chaincodeQuery 2 "$1" "$2"
 }
