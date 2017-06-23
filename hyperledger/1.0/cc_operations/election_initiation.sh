@@ -8,13 +8,13 @@ VOTERFILE=cc_operations/voters.txt
 TRUSTEEFILE=cc_operations/trustees.txt
 
 function add_voter () {
-	echo_b "Adding voter "$line
-	set_verify v_$1 -1
+	echo_b "Adding voter "$1
+	set_verify 2 v_$1 -1
 }
 
 function add_trustee () {
-	echo_b "Adding trustee "$line
-	set_verify t_$1 -1
+	echo_b "Adding trustee "$1
+	set_verify 2 t_$1 -1
 }
 
 function add_voters () {
@@ -25,7 +25,7 @@ function add_voters () {
 
 function add_trustees () {
 	while read trustee; do
-		add_voter $trustee
+		add_trustee $trustee
 	done <$TRUSTEEFILE
 }
 

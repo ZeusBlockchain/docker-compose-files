@@ -115,6 +115,7 @@ function chaincodeQueryNoVerification () {
 }
 
 function set_verify () {
-	set 2 "$1" "$2"
-	chaincodeQuery 2 "$1" "$2"
+	PEER=$1
+	set $PEER "$2" "$3"
+	chaincodeQuery $PEER "$2" "$3"
 }
