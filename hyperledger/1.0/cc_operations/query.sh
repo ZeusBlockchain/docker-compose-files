@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source scripts/setGlobals.sh
+source /go/src/github.com/hyperledger/fabric/peer/cc_operations/setGlobals.sh
 
 echo_b "Channel name : "$CHANNEL_NAME
 

@@ -84,16 +84,16 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 	} else if function == "query" {
 		// the old "Query" is now implemtned in invoke
 		return t.query(stub, args)
-	} else if function == "add" {
+	} else if function == "set" {
 		// the old "Query" is now implemtned in invoke
-		return t.add(stub, args)
+		return t.set(stub, args)
 	}
 
-	return shim.Error("Invalid invoke function name. Expecting \"invoke\" \"delete\" \"query\" \"add\"")
+	return shim.Error("Invalid invoke function name. Expecting \"invoke\" \"delete\" \"query\" \"set\"")
 }
 
 
-func (t *SimpleChaincode) add(stub shim.ChaincodeStubInterface, args []string) pb.Response {
+func (t *SimpleChaincode) set(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 	var A string    // Entity
 	var Aval string // Asset
 	var err error

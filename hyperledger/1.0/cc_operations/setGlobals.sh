@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source scripts/header.sh
+source /go/src/github.com/hyperledger/fabric/peer/scripts/header.sh
 
 CHANNEL_NAME="businesschannel"
 : ${TIMEOUT:="10"}

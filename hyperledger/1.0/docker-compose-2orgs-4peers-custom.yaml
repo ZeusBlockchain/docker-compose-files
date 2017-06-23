@@ -61,6 +61,7 @@ services:
         - ./e2e_cli/examples:/opt/gopath/src/github.com/hyperledger/fabric/examples
         - ./e2e_cli/crypto-config:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/
         - ./scripts:/opt/gopath/src/github.com/hyperledger/fabric/peer/scripts/
+        - ./cc_operations:/opt/gopath/src/github.com/hyperledger/fabric/peer/cc_operations/
         - ./e2e_cli/channel-artifacts:/opt/gopath/src/github.com/hyperledger/fabric/peer/channel-artifacts
         - ./e2e_cli/configtx.yaml:/etc/hyperledger/fabric/configtx.yaml
         - ./e2e_cli/crypto-config.yaml:/etc/hyperledger/fabric/crypto-config.yaml
