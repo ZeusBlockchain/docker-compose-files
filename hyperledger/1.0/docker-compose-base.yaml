@@ -1,10 +1,12 @@
 # Base compose files for:
 
 # orderer.example.com
-# peer0.org1.example.com
-# peer1.org1.example.com
-# peer0.org2.example.com
-# peer1.org2.example.com
+# peer0.zeus.example.com
+# peer1.zeus.example.com
+# peer0.trustees.example.com
+# peer1.trustees.example.com
+# peer0.mixers.example.com
+# peer1.mixers.example.com
 
 
 version: '2'  # v3 does not support 'extends' yet
@@ -25,89 +27,133 @@ services:
     - ./e2e_cli/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/:/var/hyperledger/orderer/tls
     command: orderer start
 
-  peer0.org1.example.com:
+  peer0.zeus.example.com:
     extends:
       file: peer-base.yaml
       service: peer-base
-    container_name: peer0.org1.example.com
-    hostname: peer0.org1.example.com
+    container_name: peer0.zeus.example.com
+    hostname: peer0.zeus.example.com
     environment:
-      - CORE_PEER_ID=peer0.org1.example.com
-      - CORE_PEER_ADDRESS=peer0.org1.example.com:7051
-      - CORE_PEER_CHAINCODELISTENADDRESS=peer0.org1.example.com:7052
-      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.org1.example.com:7051
-      - CORE_PEER_LOCALMSPID=Org1MSP
+      - CORE_PEER_ID=peer0.zeus.example.com
+      - CORE_PEER_ADDRESS=peer0.zeus.example.com:7051
+      - CORE_PEER_CHAINCODELISTENADDRESS=peer0.zeus.example.com:7052
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.zeus.example.com:7051
+      - CORE_PEER_LOCALMSPID=ZeusMSP
     volumes:
-        - ./e2e_cli/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/msp:/etc/hyperledger/fabric/msp
-        - ./e2e_cli/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls:/etc/hyperledger/fabric/tls
+        - ./e2e_cli/crypto-config/peerOrganizations/zeus.example.com/peers/peer0.zeus.example.com/msp:/etc/hyperledger/fabric/msp
+        - ./e2e_cli/crypto-config/peerOrganizations/zeus.example.com/peers/peer0.zeus.example.com/tls:/etc/hyperledger/fabric/tls
     ports:
       - 7051:7051
       - 7052:7052
       - 7053:7053
     command: peer node start
 
-  peer1.org1.example.com:
+  peer1.zeus.example.com:
     extends:
       file: peer-base.yaml
       service: peer-base
-    container_name: peer1.org1.example.com
-    hostname: peer1.org1.example.com
+    container_name: peer1.zeus.example.com
+    hostname: peer1.zeus.example.com
     environment:
-      - CORE_PEER_ID=peer1.org1.example.com
-      - CORE_PEER_ADDRESS=peer1.org1.example.com:7051
-      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer1.org1.example.com:7051
-      - CORE_PEER_CHAINCODELISTENADDRESS=peer1.org1.example.com:7052
-      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.org1.example.com:7051
-      - CORE_PEER_LOCALMSPID=Org1MSP
+      - CORE_PEER_ID=peer1.zeus.example.com
+      - CORE_PEER_ADDRESS=peer1.zeus.example.com:7051
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer1.zeus.example.com:7051
+      - CORE_PEER_CHAINCODELISTENADDRESS=peer1.zeus.example.com:7052
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.zeus.example.com:7051
+      - CORE_PEER_LOCALMSPID=ZeusMSP
     volumes:
-        - ./e2e_cli/crypto-config/peerOrganizations/org1.example.com/peers/peer1.org1.example.com/msp:/etc/hyperledger/fabric/msp
-        - ./e2e_cli/crypto-config/peerOrganizations/org1.example.com/peers/peer1.org1.example.com/tls:/etc/hyperledger/fabric/tls
+        - ./e2e_cli/crypto-config/peerOrganizations/zeus.example.com/peers/peer1.zeus.example.com/msp:/etc/hyperledger/fabric/msp
+        - ./e2e_cli/crypto-config/peerOrganizations/zeus.example.com/peers/peer1.zeus.example.com/tls:/etc/hyperledger/fabric/tls
     ports:
       - 8051:7051
       - 8052:7052
       - 8053:7053
     command: peer node start
 
-  peer0.org2.example.com:
+  peer0.trustees.example.com:
     extends:
       file: peer-base.yaml
       service: peer-base
-    container_name: peer0.org2.example.com
-    hostname: peer0.org2.example.com
+    container_name: peer0.trustees.example.com
+    hostname: peer0.trustees.example.com
     environment:
-      - CORE_PEER_ID=peer0.org2.example.com
-      - CORE_PEER_ADDRESS=peer0.org2.example.com:7051
-      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.org2.example.com:7051
-      - CORE_PEER_CHAINCODELISTENADDRESS=peer0.org2.example.com:7052
-      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.org2.example.com:7051
-      - CORE_PEER_LOCALMSPID=Org2MSP
+      - CORE_PEER_ID=peer0.trustees.example.com
+      - CORE_PEER_ADDRESS=peer0.trustees.example.com:7051
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.trustees.example.com:7051
+      - CORE_PEER_CHAINCODELISTENADDRESS=peer0.trustees.example.com:7052
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.trustees.example.com:7051
+      - CORE_PEER_LOCALMSPID=TrusteesMSP
     volumes:
-        - ./e2e_cli/crypto-config/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/msp:/etc/hyperledger/fabric/msp
-        - ./e2e_cli/crypto-config/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls:/etc/hyperledger/fabric/tls
+        - ./e2e_cli/crypto-config/peerOrganizations/trustees.example.com/peers/peer0.trustees.example.com/msp:/etc/hyperledger/fabric/msp
+        - ./e2e_cli/crypto-config/peerOrganizations/trustees.example.com/peers/peer0.trustees.example.com/tls:/etc/hyperledger/fabric/tls
     ports:
       - 9051:7051
       - 9052:7052
       - 9053:7053
     command: peer node start
 
-  peer1.org2.example.com:
+  peer1.trustees.example.com:
     extends:
       file: peer-base.yaml
       service: peer-base
-    container_name: peer1.org2.example.com
-    hostname: peer1.org2.example.com
+    container_name: peer1.trustees.example.com
+    hostname: peer1.trustees.example.com
     environment:
-      - CORE_PEER_ID=peer1.org2.example.com
-      - CORE_PEER_ADDRESS=peer1.org2.example.com:7051
-      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer1.org2.example.com:7051
-      - CORE_PEER_CHAINCODELISTENADDRESS=peer1.org2.example.com:7052
-      - CORE_PEER_GOSSIP_BOOTSTRAP=peer1.org2.example.com:7051
-      - CORE_PEER_LOCALMSPID=Org2MSP
+      - CORE_PEER_ID=peer1.trustees.example.com
+      - CORE_PEER_ADDRESS=peer1.trustees.example.com:7051
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer1.trustees.example.com:7051
+      - CORE_PEER_CHAINCODELISTENADDRESS=peer1.trustees.example.com:7052
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer1.trustees.example.com:7051
+      - CORE_PEER_LOCALMSPID=TrusteesMSP
     volumes:
-        - ./e2e_cli/crypto-config/peerOrganizations/org2.example.com/peers/peer1.org2.example.com/msp:/etc/hyperledger/fabric/msp
-        - ./e2e_cli/crypto-config/peerOrganizations/org2.example.com/peers/peer1.org2.example.com/tls:/etc/hyperledger/fabric/tls
+        - ./e2e_cli/crypto-config/peerOrganizations/trustees.example.com/peers/peer1.trustees.example.com/msp:/etc/hyperledger/fabric/msp
+        - ./e2e_cli/crypto-config/peerOrganizations/trustees.example.com/peers/peer1.trustees.example.com/tls:/etc/hyperledger/fabric/tls
     ports:
       - 10051:7051
       - 10052:7052
       - 10053:7053
+    command: peer node start
+
+  peer0.mixers.example.com:
+    extends:
+      file: peer-base.yaml
+      service: peer-base
+    container_name: peer0.mixers.example.com
+    hostname: peer0.mixers.example.com
+    environment:
+      - CORE_PEER_ID=peer0.mixers.example.com
+      - CORE_PEER_ADDRESS=peer0.mixers.example.com:7051
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.mixers.example.com:7051
+      - CORE_PEER_CHAINCODELISTENADDRESS=peer0.mixers.example.com:7052
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.mixers.example.com:7051
+      - CORE_PEER_LOCALMSPID=MixersMSP
+    volumes:
+        - ./e2e_cli/crypto-config/peerOrganizations/mixers.example.com/peers/peer0.mixers.example.com/msp:/etc/hyperledger/fabric/msp
+        - ./e2e_cli/crypto-config/peerOrganizations/mixers.example.com/peers/peer0.mixers.example.com/tls:/etc/hyperledger/fabric/tls
+    ports:
+      - 11051:7051
+      - 11052:7052
+      - 11053:7053
+    command: peer node start
+
+  peer1.mixers.example.com:
+    extends:
+      file: peer-base.yaml
+      service: peer-base
+    container_name: peer1.mixers.example.com
+    hostname: peer1.mixers.example.com
+    environment:
+      - CORE_PEER_ID=peer1.mixers.example.com
+      - CORE_PEER_ADDRESS=peer1.mixers.example.com:7051
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer1.mixers.example.com:7051
+      - CORE_PEER_CHAINCODELISTENADDRESS=peer1.mixers.example.com:7052
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer1.mixers.example.com:7051
+      - CORE_PEER_LOCALMSPID=MixersMSP
+    volumes:
+        - ./e2e_cli/crypto-config/peerOrganizations/mixers.example.com/peers/peer1.mixers.example.com/msp:/etc/hyperledger/fabric/msp
+        - ./e2e_cli/crypto-config/peerOrganizations/mixers.example.com/peers/peer1.mixers.example.com/tls:/etc/hyperledger/fabric/tls
+    ports:
+      - 12051:7051
+      - 12052:7052
+      - 12053:7053
     command: peer node start
