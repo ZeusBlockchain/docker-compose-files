@@ -18,25 +18,25 @@ function add_trustee () {
 }
 
 function add_voters () {
-	VOTERS="["
+	VOTERS=""
 	while read voter; do
 		VOTERS=$VOTERS$voter","
 		add_voter $voter
 	done <$VOTERFILE
 	VOTERS="${VOTERS::-1}" # Remove last ','
-	VOTERS=$VOTERS"]"
-	set_verify 2 VOTERS $VOTERS
+	# set_map_verify 2 VOTERS $VOTERS  # Verification will not work due to map ordering. Need to fix this later
+	set_map 2 VOTERS $VOTERS  # Currently no verification
 }
 
 function add_trustees () {
-	TRUSTEES="["
+	TRUSTEES=""
 	while read trustee; do
 		TRUSTEES=$TRUSTEES$trustee","
 		add_trustee $trustee
 	done <$TRUSTEEFILE
 	TRUSTEES="${TRUSTEES::-1}" # Remove last ','
-	TRUSTEES=$TRUSTEES"]"
-	set_verify 2 TRUSTEES $TRUSTEES
+	# set_map_verify 2 TRUSTEES $TRUSTEES  # Verification will not work due to map ordering. Need to fix this later
+	set_map 2 TRUSTEES $TRUSTEES  # Currently no verification
 }
 
 # Add election information

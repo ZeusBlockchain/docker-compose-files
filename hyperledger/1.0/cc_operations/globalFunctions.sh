@@ -70,6 +70,23 @@ function set () {
 	echo
 }
 
+function set_map () {
+	PEER=$1
+	setGlobals $PEER
+	# while 'peer chaincode' command can get the orderer endpoint from the peer (if join was successful),
+	# lets supply it directly as we know it using the "-o" option
+	if [ -z "$CORE_PEER_TLS_ENABLED" -o "$CORE_PEER_TLS_ENABLED" = "false" ]; then
+		peer chaincode invoke -o orderer.example.com:7050 -C $CHANNEL_NAME -n mycc -c '{"Args":["set_map","'$2'","'$3'"]}' >&log.txt
+	else
+		peer chaincode invoke -o orderer.example.com:7050  --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C $CHANNEL_NAME -n mycc -c '{"Args":["set_map","'$2'","'$3'"]}' >&log.txt
+	fi
+	res=$?
+	cat log.txt
+	verifyResult $res "Invoke execution on PEER$PEER failed "
+	echo_g "===================== Invoke transaction on PEER$PEER on channel '$CHANNEL_NAME' is successful ===================== "
+	echo
+}
+
 function chaincodeQuery () {
     PEER=$1
     echo_b "===================== Querying on PEER$PEER on channel '$CHANNEL_NAME'... ===================== "
@@ -84,6 +101,35 @@ function chaincodeQuery () {
         sleep 3
         echo_b "Attempting to Query PEER$PEER ...$(($(date +%s)-starttime)) secs"
         peer chaincode query -C $CHANNEL_NAME -n mycc -c '{"Args":["query","'$2'"]}' >&log.txt
+        test $? -eq 0 && VALUE=$(cat log.txt | awk '/Query Result/ {print $NF}')
+        test "$VALUE" = "$3" && let rc=0
+    done
+    echo
+    cat log.txt
+    if test $rc -eq 0 ; then
+        echo_g "===================== Query on PEER$PEER on channel '$CHANNEL_NAME' is successful ===================== "
+    else
+        echo_r "!!!!!!!!!!!!!!! Query result on PEER$PEER is INVALID !!!!!!!!!!!!!!!!"
+        echo_r "================== ERROR !!! FAILED to execute End-2-End Scenario =================="
+        echo
+        exit 1
+    fi
+}
+
+function chaincodeQueryMap () {
+    PEER=$1
+    echo_b "===================== Querying on PEER$PEER on channel '$CHANNEL_NAME'... ===================== "
+    setGlobals $PEER
+    local rc=1
+    local starttime=$(date +%s)
+
+    # continue to poll
+    # we either get a successful response, or reach TIMEOUT
+    while test "$(($(date +%s)-starttime))" -lt "$TIMEOUT" -a $rc -ne 0
+    do
+        sleep 3
+        echo_b "Attempting to Query PEER$PEER ...$(($(date +%s)-starttime)) secs"
+        peer chaincode query -C $CHANNEL_NAME -n mycc -c '{"Args":["query_map","'$2'"]}' >&log.txt
         test $? -eq 0 && VALUE=$(cat log.txt | awk '/Query Result/ {print $NF}')
         test "$VALUE" = "$3" && let rc=0
     done
@@ -114,8 +160,29 @@ function chaincodeQueryNoVerification () {
     cat log.txt
 }
 
+function chaincodeQueryMapNoVerification () {
+    PEER=$1
+    echo_b "===================== Querying on PEER$PEER on channel '$CHANNEL_NAME'... ===================== "
+    setGlobals $PEER
+    local starttime=$(date +%s)
+
+    # continue to poll
+    # we either get a successful response, or reach TIMEOUT
+    echo_b "Attempting to Query PEER$PEER ...$(($(date +%s)-starttime)) secs"
+    peer chaincode query -C $CHANNEL_NAME -n mycc -c '{"Args":["query_map","'$2'"]}' >&log.txt
+    test $? -eq 0 && VALUE=$(cat log.txt | awk '/Query Result/ {print $NF}')
+    echo
+    cat log.txt
+}
+
 function set_verify () {
 	PEER=$1
 	set $PEER "$2" "$3"
 	chaincodeQuery $PEER "$2" "$3"
+}
+
+function set_map_verify () {
+	PEER=$1
+	set_map $PEER "$2" "$3"
+	chaincodeQueryMap $PEER "$2" "$3" # Not sure if it works due to map ordering
 }

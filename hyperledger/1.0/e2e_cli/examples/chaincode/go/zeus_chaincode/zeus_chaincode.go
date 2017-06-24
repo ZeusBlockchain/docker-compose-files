@@ -25,6 +25,9 @@ package main
 import (
 	"fmt"
 	"strconv"
+	"strings"
+	"encoding/gob"
+	"bytes"
 
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 	pb "github.com/hyperledger/fabric/protos/peer"
@@ -85,11 +88,54 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 		// the old "Query" is now implemtned in invoke
 		return t.query(stub, args)
 	} else if function == "set" {
-		// the old "Query" is now implemtned in invoke
+		// set a variable with a specified value
 		return t.set(stub, args)
+	} else if function == "set_map" {
+		// set a variable with a specified list o values. A serialized map will be created and stored
+		return t.set_map(stub, args)
+	} else if function == "query_map" {
+		// query a variable and get a string which consists of all the list elements
+		return t.query_map(stub, args)
 	}
 
-	return shim.Error("Invalid invoke function name. Expecting \"invoke\" \"delete\" \"query\" \"set\"")
+	return shim.Error("Invalid invoke function name. Expecting \"invoke\" \"delete\" \"query\" \"set\" \"set_map\" \"query_map\"")
+}
+
+func (t *SimpleChaincode) set_map(stub shim.ChaincodeStubInterface, args []string) pb.Response {
+	var A string    // Entity
+	var Aval string // Asset
+	var err error
+
+	if len(args) != 2 {
+		return shim.Error("Incorrect number of arguments. Expecting 2")
+	}
+
+	A = args[0]
+	Aval = args[1]
+	// Create a list (slice) from the string
+	List := strings.Split(Aval, ",")
+	// Create a map from the list
+	Map := make(map[string]string)
+	for i := 0; i < len(List); i +=1 {
+		Map[List[i]] = "DummyStringValue"
+	}
+	fmt.Printf("%#v\n", Map)
+
+	b := new(bytes.Buffer)
+	e := gob.NewEncoder(b)
+	// Encoding the map
+	err = e.Encode(Map)
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+
+	// Write the state back to the ledger
+	err = stub.PutState(A, b.Bytes())
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+
+	return shim.Success(nil)
 }
 
 
@@ -221,6 +267,47 @@ func (t *SimpleChaincode) query(stub shim.ChaincodeStubInterface, args []string)
 	jsonResp := "{\"Name\":\"" + A + "\",\"Amount\":\"" + string(Avalbytes) + "\"}"
 	fmt.Printf("Query Response:%s\n", jsonResp)
 	return shim.Success(Avalbytes)
+}
+
+func (t *SimpleChaincode) query_map(stub shim.ChaincodeStubInterface, args []string) pb.Response {
+	var A string // Entities
+	var err error
+
+	if len(args) != 1 {
+		return shim.Error("Incorrect number of arguments. Expecting name of the person to query")
+	}
+
+	A = args[0]
+
+	// Get the state from the ledger
+	Avalbytes, err := stub.GetState(A)
+	if err != nil {
+		jsonResp := "{\"Error\":\"Failed to get state for " + A + "\"}"
+		return shim.Error(jsonResp)
+	}
+
+	if Avalbytes == nil {
+		jsonResp := "{\"Error\":\"Nil amount for " + A + "\"}"
+		return shim.Error(jsonResp)
+	}
+	b := bytes.NewBuffer(Avalbytes)
+	var decodedMap map[string]string
+	d := gob.NewDecoder(b)
+
+	// Decoding the serialized data
+	err = d.Decode(&decodedMap)
+	if err != nil {
+		shim.Error(err.Error())
+	}
+	fmt.Printf("%#v\n", decodedMap)
+	keys := make([]string, 0, len(decodedMap))
+	for k := range decodedMap {
+		keys = append(keys, k)
+	}
+	Avalstring := strings.Join(keys[:],",")
+	jsonResp := "{\"Name\":\"" + A + "\",\"Amount\":\"" + string(Avalbytes) + "\"}"
+	fmt.Printf("Query Response:%s\n", jsonResp)
+	return shim.Success([]byte(Avalstring))
 }
 
 func main() {
