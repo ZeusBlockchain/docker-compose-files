@@ -118,6 +118,7 @@ function chaincodeQuery () {
 
 function chaincodeQueryMap () {
     PEER=$1
+	CORRECTVALUE=$3
     echo_b "===================== Querying on PEER$PEER on channel '$CHANNEL_NAME'... ===================== "
     setGlobals $PEER
     local rc=1
@@ -131,7 +132,20 @@ function chaincodeQueryMap () {
         echo_b "Attempting to Query PEER$PEER ...$(($(date +%s)-starttime)) secs"
         peer chaincode query -C $CHANNEL_NAME -n mycc -c '{"Args":["query_map","'$2'"]}' >&log.txt
         test $? -eq 0 && VALUE=$(cat log.txt | awk '/Query Result/ {print $NF}')
-        test "$VALUE" = "$3" && let rc=0
+        # test "$VALUE" = "$3" && let rc=0
+		IFS=',' read -r -a array1 <<< "$VALUE"
+		IFS=',' read -r -a array2 <<< "$CORRECTVALUE"
+		sorted1=( $(
+			for el in "${array1[@]}"
+			do
+				echo "$el"
+			done | sort) )
+		sorted2=( $(
+			for el in "${array2[@]}"
+			do
+				echo "$el"
+			done | sort) )
+		[ "${sorted1[*]}" == "${sorted2[*]}" ] && rc=0 || rc=1
     done
     echo
     cat log.txt
