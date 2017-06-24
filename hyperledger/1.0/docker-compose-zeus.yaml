@@ -22,25 +22,35 @@ services:
       file: docker-compose-base.yaml
       service: orderer.example.com
 
-  peer0.org1.example.com:
+  peer0.zeus.example.com:
     extends:
       file: docker-compose-base.yaml
-      service: peer0.org1.example.com
+      service: peer0.zeus.example.com
 
-  peer1.org1.example.com:
+  peer1.zeus.example.com:
     extends:
       file: docker-compose-base.yaml
-      service: peer1.org1.example.com
+      service: peer1.zeus.example.com
 
-  peer0.org2.example.com:
+  peer0.trustees.example.com:
     extends:
       file: docker-compose-base.yaml
-      service: peer0.org2.example.com
+      service: peer0.trustees.example.com
 
-  peer1.org2.example.com:
+  peer1.trustees.example.com:
     extends:
       file: docker-compose-base.yaml
-      service: peer1.org2.example.com
+      service: peer1.trustees.example.com
+
+  peer0.mixers.example.com:
+    extends:
+      file: docker-compose-base.yaml
+      service: peer0.mixers.example.com
+  
+  peer1.mixers.example.com:
+    extends:
+      file: docker-compose-base.yaml
+      service: peer1.mixers.example.com
 
   cli:
     container_name: fabric-cli
@@ -50,33 +60,37 @@ services:
     environment:
       - CORE_PEER_ID=fabric-cli
       - CORE_LOGGING_LEVEL=DEBUG
-      - CORE_PEER_ADDRESS=peer0.org1.example.com:7051 # default to operate on peer0.org1
+      - CORE_PEER_ADDRESS=peer0.zeus.example.com:7051 # default to operate on peer0.zeus
       - CORE_PEER_LOCALMSPID=Org1MSP
       - CORE_PEER_TLS_ENABLED=true  # to enable TLS, change to true
-      - CORE_PEER_TLS_CERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/server.crt
-      - CORE_PEER_TLS_KEY_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/server.key
-      - CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
-      - CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
+      - CORE_PEER_TLS_CERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/zeus.example.com/peers/peer0.zeus.example.com/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/zeus.example.com/peers/peer0.zeus.example.com/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/zeus.example.com/peers/peer0.zeus.example.com/tls/ca.crt
+      - CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/zeus.example.com/users/Admin@zeus.example.com/msp
     volumes:
         - ./e2e_cli/examples:/opt/gopath/src/github.com/hyperledger/fabric/examples
         - ./e2e_cli/crypto-config:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/
         - ./scripts:/opt/gopath/src/github.com/hyperledger/fabric/peer/scripts/
         - ./cc_operations:/opt/gopath/src/github.com/hyperledger/fabric/peer/cc_operations/
         - ./e2e_cli/channel-artifacts:/opt/gopath/src/github.com/hyperledger/fabric/peer/channel-artifacts
-        - ./e2e_cli/configtx.yaml:/etc/hyperledger/fabric/configtx.yaml
-        - ./e2e_cli/crypto-config.yaml:/etc/hyperledger/fabric/crypto-config.yaml
+        - ./e2e_cli/zeus-configtx.yaml:/etc/hyperledger/fabric/configtx.yaml
+        - ./e2e_cli/zeus-crypto-config.yaml:/etc/hyperledger/fabric/crypto-config.yaml
     depends_on:
       - orderer.example.com
-      - peer0.org1.example.com
-      - peer1.org1.example.com
-      - peer0.org2.example.com
-      - peer1.org2.example.com
+      - peer0.zeus.example.com
+      - peer1.zeus.example.com
+      - peer0.trustees.example.com
+      - peer1.trustees.example.com
+      - peer0.mixers.example.com
+      - peer1.mixers.example.com
     links:
       - orderer.example.com
-      - peer0.org1.example.com
-      - peer1.org1.example.com
-      - peer0.org2.example.com
-      - peer1.org2.example.com
+      - peer0.zeus.example.com
+      - peer1.zeus.example.com
+      - peer0.trustees.example.com
+      - peer1.trustees.example.com
+      - peer0.mixers.example.com
+      - peer1.mixers.example.com      
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
     command: bash -c 'while true; do sleep 20170504; done'
 
