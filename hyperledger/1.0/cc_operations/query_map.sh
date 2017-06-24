@@ -10,7 +10,7 @@ if [ -z "$2" ]; then
     chaincodeQueryMapNoVerification 2 "$1"
 else
     echo_b "Querying chaincode on org1/peer0..."
-    chaincodeQuery 2 "$1" "$2"
+    chaincodeQueryMap 2 "$1" "$2"
 fi
 
 echo
