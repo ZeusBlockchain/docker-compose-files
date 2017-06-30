@@ -4,39 +4,31 @@ source cc_operations/globalFunctions.sh
 
 echo_b "Channel name : "$CHANNEL_NAME
 
-VOTERFILE=cc_operations/voters.txt
-TRUSTEEFILE=cc_operations/trustees.txt
+VOTERFILE=proofs/voters.log.txt
+TRUSTEEFILE=proofs/trustees.log.txt
 
 function add_voter () {
-	echo_b "Adding voter "$1
-	set_verify 2 v_$1 -1
+	echo_b "Adding voter ""$1"
+	insert_map_verify 2 VOTERS "$1" "$2"
 }
 
 function add_trustee () {
-	echo_b "Adding trustee "$1
-	set_verify 2 t_$1 -1
+	echo_b "Adding trustee ""$1"
+	insert_map_verify 2 TRUSTEES "$1" "$2"
 }
 
 function add_voters () {
-	VOTERS=""
 	while read voter; do
-		VOTERS=$VOTERS$voter","
-		add_voter $voter
+		IFS=':' tokens=( $voter )
+		add_voter ${tokens[0]} ${tokens[1]}
 	done <$VOTERFILE
-	VOTERS="${VOTERS::-1}" # Remove last ','
-	# set_map_verify 2 VOTERS $VOTERS  # Verification will not work due to map ordering. Need to fix this later
-	set_map 2 VOTERS $VOTERS  # Currently no verification
 }
 
 function add_trustees () {
-	TRUSTEES=""
 	while read trustee; do
-		TRUSTEES=$TRUSTEES$trustee","
-		add_trustee $trustee
+		IFS=':' tokens=( $trustee )
+		add_trustee ${tokens[0]} ${tokens[1]}
 	done <$TRUSTEEFILE
-	TRUSTEES="${TRUSTEES::-1}" # Remove last ','
-	# set_map_verify 2 TRUSTEES $TRUSTEES  # Verification will not work due to map ordering. Need to fix this later
-	set_map 2 TRUSTEES $TRUSTEES  # Currently no verification
 }
 
 # Add election information
