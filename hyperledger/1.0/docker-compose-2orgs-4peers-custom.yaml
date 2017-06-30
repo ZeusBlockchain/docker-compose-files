@@ -65,6 +65,8 @@ services:
         - ./e2e_cli/channel-artifacts:/opt/gopath/src/github.com/hyperledger/fabric/peer/channel-artifacts
         - ./e2e_cli/configtx.yaml:/etc/hyperledger/fabric/configtx.yaml
         - ./e2e_cli/crypto-config.yaml:/etc/hyperledger/fabric/crypto-config.yaml
+        # proof files
+        - ./proofs/:/opt/gopath/src/github.com/hyperledger/fabric/peer/proofs/
     depends_on:
       - orderer.example.com
       - peer0.org1.example.com
