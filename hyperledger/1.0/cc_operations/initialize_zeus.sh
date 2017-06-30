@@ -7,7 +7,7 @@ echo " ============================================== "
 echo
 
 source scripts/header.sh
-source cc_operations/globalFunctions.sh
+source cc_operations/globalFunctions_zeus.sh
 
 CHANNEL_NAME="$1"
 : ${CHANNEL_NAME:="businesschannel"}

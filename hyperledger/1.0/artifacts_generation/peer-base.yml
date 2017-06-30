@@ -31,18 +31,18 @@ services:
     - ./e2e_cli/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/:/var/hyperledger/orderer/tls
     command: orderer
 
-  peer0.org1.example.com:
+  peer0.zeus.example.com:
     extends:
       file: peer.yml
       service: peer
-    container_name: peer0.org1.example.com
-    hostname: peer0.org1.example.com
+    container_name: peer0.zeus.example.com
+    hostname: peer0.zeus.example.com
     environment:
-      - CORE_PEER_ID=peer0.org1.example.com
-      - CORE_PEER_ADDRESS=peer0.org1.example.com:7051
-      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.org1.example.com:7051
+      - CORE_PEER_ID=peer0.zeus.example.com
+      - CORE_PEER_ADDRESS=peer0.zeus.example.com:7051
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.zeus.example.com:7051
       - CORE_PEER_GOSSIP_ORGLEADER=true
-      - CORE_PEER_LOCALMSPID=Org1MSP
+      - CORE_PEER_LOCALMSPID=ZeusMSP
       - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
       - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
       - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
@@ -50,22 +50,22 @@ services:
       - 7051:7051
       - 7053:7053
     volumes:
-        - ./e2e_cli/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/msp:/etc/hyperledger/fabric/msp
-        - ./e2e_cli/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls:/etc/hyperledger/fabric/tls
+        - ./e2e_cli/crypto-config/peerOrganizations/zeus.example.com/peers/peer0.zeus.example.com/msp:/etc/hyperledger/fabric/msp
+        - ./e2e_cli/crypto-config/peerOrganizations/zeus.example.com/peers/peer0.zeus.example.com/tls:/etc/hyperledger/fabric/tls
     command: peer node start --peer-defaultchain=false
 
-  peer1.org1.example.com:
+  peer1.zeus.example.com:
     extends:
       file: peer.yml
       service: peer
-    container_name: peer1.org1.example.com
-    hostname: peer1.org1.example.com
+    container_name: peer1.zeus.example.com
+    hostname: peer1.zeus.example.com
     environment:
-      - CORE_PEER_ID=peer1.org1.example.com
-      - CORE_PEER_ADDRESS=peer1.org1.example.com:7051
-      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer1.org1.example.com:7051
-      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.org1.example.com:7051
-      - CORE_PEER_LOCALMSPID=Org1MSP
+      - CORE_PEER_ID=peer1.zeus.example.com
+      - CORE_PEER_ADDRESS=peer1.zeus.example.com:7051
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer1.zeus.example.com:7051
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.zeus.example.com:7051
+      - CORE_PEER_LOCALMSPID=ZeusMSP
       - CORE_PEER_GOSSIP_ORGLEADER=true
      # - CORE_PEER_COMMITTER_LEDGER_ORDERER=orderer.example.com:7050
       - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
@@ -75,22 +75,22 @@ services:
       - 8051:7051
       - 8053:7053
     volumes:
-        - ./e2e_cli/crypto-config/peerOrganizations/org1.example.com/peers/peer1.org1.example.com/msp:/etc/hyperledger/fabric/msp
-        - ./e2e_cli/crypto-config/peerOrganizations/org1.example.com/peers/peer1.org1.example.com/tls:/etc/hyperledger/fabric/tls
+        - ./e2e_cli/crypto-config/peerOrganizations/zeus.example.com/peers/peer1.zeus.example.com/msp:/etc/hyperledger/fabric/msp
+        - ./e2e_cli/crypto-config/peerOrganizations/zeus.example.com/peers/peer1.zeus.example.com/tls:/etc/hyperledger/fabric/tls
     command: peer node start --peer-defaultchain=false
 
-  peer0.org2.example.com:
+  peer0.trustees.example.com:
     extends:
       file: peer.yml
       service: peer
-    container_name: peer0.org2.example.com
-    hostname: peer0.org2.example.com
+    container_name: peer0.trustees.example.com
+    hostname: peer0.trustees.example.com
     environment:
-      - CORE_PEER_ID=peer0.org2.example.com
-      - CORE_PEER_ADDRESS=peer0.org2.example.com:7051
-      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.org2.example.com:7051
-      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.org2.example.com:7051
-      - CORE_PEER_LOCALMSPID=Org2MSP
+      - CORE_PEER_ID=peer0.trustees.example.com
+      - CORE_PEER_ADDRESS=peer0.trustees.example.com:7051
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.trustees.example.com:7051
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.trustees.example.com:7051
+      - CORE_PEER_LOCALMSPID=TrusteesMSP
       - CORE_PEER_GOSSIP_ORGLEADER=true
      # - CORE_PEER_COMMITTER_LEDGER_ORDERER=orderer.example.com:7050
       - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
@@ -100,22 +100,22 @@ services:
       - 9051:7051
       - 9053:7053
     volumes:
-        - ./e2e_cli/crypto-config/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/msp:/etc/hyperledger/fabric/msp
-        - ./e2e_cli/crypto-config/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls:/etc/hyperledger/fabric/tls
+        - ./e2e_cli/crypto-config/peerOrganizations/trustees.example.com/peers/peer0.trustees.example.com/msp:/etc/hyperledger/fabric/msp
+        - ./e2e_cli/crypto-config/peerOrganizations/trustees.example.com/peers/peer0.trustees.example.com/tls:/etc/hyperledger/fabric/tls
     command: peer node start --peer-defaultchain=false
 
-  peer1.org2.example.com:
+  peer1.trustees.example.com:
     extends:
       file: peer.yml
       service: peer
-    container_name: peer1.org2.example.com
-    hostname: peer1.org2.example.com
+    container_name: peer1.trustees.example.com
+    hostname: peer1.trustees.example.com
     environment:
-      - CORE_PEER_ID=peer1.org2.example.com
-      - CORE_PEER_ADDRESS=peer1.org2.example.com:7051
-      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer1.org2.example.com:7051
-      - CORE_PEER_GOSSIP_BOOTSTRAP=peer1.org2.example.com:7051
-      - CORE_PEER_LOCALMSPID=Org2MSP
+      - CORE_PEER_ID=peer1.trustees.example.com
+      - CORE_PEER_ADDRESS=peer1.trustees.example.com:7051
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer1.trustees.example.com:7051
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer1.trustees.example.com:7051
+      - CORE_PEER_LOCALMSPID=TrusteesMSP
       - CORE_PEER_GOSSIP_ORGLEADER=true
      # - CORE_PEER_COMMITTER_LEDGER_ORDERER=orderer.example.com:7050
       - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
@@ -125,22 +125,22 @@ services:
       - 10051:7051
       - 10053:7053
     volumes:
-        - ./e2e_cli/crypto-config/peerOrganizations/org2.example.com/peers/peer1.org2.example.com/msp:/etc/hyperledger/fabric/msp
-        - ./e2e_cli/crypto-config/peerOrganizations/org2.example.com/peers/peer1.org2.example.com/tls:/etc/hyperledger/fabric/tls
-    command: peer node start --peer-defaultchain=false 
+        - ./e2e_cli/crypto-config/peerOrganizations/trustees.example.com/peers/peer1.trustees.example.com/msp:/etc/hyperledger/fabric/msp
+        - ./e2e_cli/crypto-config/peerOrganizations/trustees.example.com/peers/peer1.trustees.example.com/tls:/etc/hyperledger/fabric/tls
+    command: peer node start --peer-defaultchain=false
 
-  peer0.org3.example.com:
+  peer0.mixers.example.com:
     extends:
       file: peer.yml
       service: peer
-    container_name: peer0.org3.example.com
-    hostname: peer0.org3.example.com
+    container_name: peer0.mixers.example.com
+    hostname: peer0.mixers.example.com
     environment:
-      - CORE_PEER_ID=peer0.org3.example.com
-      - CORE_PEER_ADDRESS=peer0.org3.example.com:7051
-      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.org3.example.com:7051
-      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.org3.example.com:7051
-      - CORE_PEER_LOCALMSPID=Org3MSP
+      - CORE_PEER_ID=peer0.mixers.example.com
+      - CORE_PEER_ADDRESS=peer0.mixers.example.com:7051
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.mixers.example.com:7051
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.mixers.example.com:7051
+      - CORE_PEER_LOCALMSPID=MixersMSP
       - CORE_PEER_GOSSIP_ORGLEADER=true
      # - CORE_PEER_COMMITTER_LEDGER_ORDERER=orderer.example.com:7050
       - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
@@ -150,6 +150,6 @@ services:
       - 11051:7051
       - 11053:7053
     volumes:
-        - ./e2e_cli/crypto-config/peerOrganizations/org3.example.com/peers/peer0.org3.example.com/msp:/etc/hyperledger/fabric/msp
-        - ./e2e_cli/crypto-config/peerOrganizations/org3.example.com/peers/peer0.org3.example.com/tls:/etc/hyperledger/fabric/tls
+        - ./e2e_cli/crypto-config/peerOrganizations/mixers.example.com/peers/peer0.mixers.example.com/msp:/etc/hyperledger/fabric/msp
+        - ./e2e_cli/crypto-config/peerOrganizations/mixers.example.com/peers/peer0.mixers.example.com/tls:/etc/hyperledger/fabric/tls
     command: peer node start --peer-defaultchain=false

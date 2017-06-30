@@ -38,7 +38,7 @@ function setGlobals () {
             CORE_PEER_ADDRESS=peer1.mixers.example.com:7051
         fi
     fi
-    # env |grep CORE
+    env |grep CORE
 }
 
 function verifyResult () {
