@@ -85,12 +85,12 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 		// Deletes an entity from its state
 		return t.delete(stub, args)
 	} else if function == "query" {
-		// the old "Query" is now implemtned in invoke
+		// the old "Query" is now implemented in invoke
 		return t.query(stub, args)
 	} else if function == "set" {
 		// set a variable with a specified value
 		return t.set(stub, args)
-	}  else if function == "query_map_keys" {
+	} else if function == "query_map_keys" {
 		// query a variable and get a string which consists of all the list elements
 		return t.query_map_keys(stub, args)
 	} else if function == "query_map_field" {

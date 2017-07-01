@@ -147,7 +147,7 @@ function chaincodeQueryMap () {
     do
         sleep 3
         echo_b "Attempting to Query PEER$PEER ...$(($(date +%s)-starttime)) secs"
-        peer chaincode query -C $CHANNEL_NAME -n mycc -c '{"Args":["query_map","'$2'"]}' >&log.txt
+        peer chaincode query -C $CHANNEL_NAME -n mycc -c '{"Args":["query_map_keys","'$2'"]}' >&log.txt
         test $? -eq 0 && VALUE=$(cat log.txt | grep "Query Result:" | cut -f 3- -d " ")
         # test "$VALUE" = "$3" && let rc=0
 		IFS=',' read -r -a array1 <<< "$VALUE"
@@ -248,7 +248,7 @@ function chaincodeQueryMapNoVerification () {
     # continue to poll
     # we either get a successful response, or reach TIMEOUT
     echo_b "Attempting to Query PEER$PEER ...$(($(date +%s)-starttime)) secs"
-    peer chaincode query -C $CHANNEL_NAME -n mycc -c '{"Args":["query_map","'$2'"]}' >&log.txt
+    peer chaincode query -C $CHANNEL_NAME -n mycc -c '{"Args":["query_map_keys","'$2'"]}' >&log.txt
     test $? -eq 0 && VALUE=$(cat log.txt | grep "Query Result:" | cut -f 3- -d " ")
     echo
     cat log.txt
