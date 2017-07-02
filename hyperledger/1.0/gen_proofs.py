@@ -63,19 +63,21 @@ with open('chicken_poll_proofs.json') as data_file:
     f.close()
 
 ################# Voting Phase #################
-    
+
     f = open("./proofs/votes.log.txt","w")
-    f.write(str(proofs['votes']).replace("\\n", "##"))
+    votes = proofs['votes']
+    for vote in votes:
+        f.write((str(vote)+"\n").replace("\\n", "##"))
     f.close()
-    
+
     f = open("./proofs/audit_requests.log.txt","w")
     f.write(str(proofs['audit_requests']))
     f.close()
-    
+
     f = open("./proofs/audit_publications.log.txt","w")
     f.write(str(proofs['audit_publications']))
     f.close()
-    
+
     f = open("./proofs/cast_votes.log.txt","w")
     cast_votes = proofs['cast_votes']
     for cast_vote, info in cast_votes.items():
@@ -96,7 +98,7 @@ with open('chicken_poll_proofs.json') as data_file:
     f = open("./proofs/trustee_factors.log.txt","w")
     f.write(str(proofs['trustee_factors']))
     f.close()
-    
+
 ################### Results ####################
 
     f = open("./proofs/zeus_decryption_factors.log.txt","w")

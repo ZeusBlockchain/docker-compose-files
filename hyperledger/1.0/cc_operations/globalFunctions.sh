@@ -301,19 +301,10 @@ function inList () {
     setGlobals $PEER
 	local rc=1
     local starttime=$(date +%s)
-	while test "$(($(date +%s)-starttime))" -lt "$TIMEOUT" -a $rc -ne 0
-	do
-		sleep 3
-		echo_b "Attempting to Query PEER$PEER ...$(($(date +%s)-starttime)) secs"
-		peer chaincode query -C $CHANNEL_NAME -n mycc -c '{"Args":["query_list","'"$2"'"]}' >&log.txt
-		test $? -eq 0 && VALUE=$(cat log.txt | grep "Query Result:" | cut -f 3- -d " ")
-		IFS=',' tokens=( $VALUE )
-		for token in "${tokens[@]}"
-		do
-			test $token = "$3" && let rc=0
-		done
-	done
-	echo
+	echo_b "Attempting to Query PEER$PEER ...$(($(date +%s)-starttime)) secs"
+	peer chaincode query -C $CHANNEL_NAME -n mycc -c '{"Args":["in_list","'"$2"'","'"$3"'"]}' >&log.txt
+	test $? -eq 0 && VALUE=$(cat log.txt | grep "Query Result:" | cut -f 3- -d " ")
+	test "$VALUE" = "true" && let rc=0
 	cat log.txt
 	if test $rc -eq 0 ; then
 		echo_g "===================== Query on PEER$PEER on channel '$CHANNEL_NAME' is successful ===================== "
@@ -325,7 +316,7 @@ function inList () {
 	fi
 }
 
-function chaincodeQueryListLast () {
+function verifyLast () {
     PEER=$1
     echo_b "===================== Querying on PEER$PEER on channel '$CHANNEL_NAME'... ===================== "
     setGlobals $PEER
@@ -335,10 +326,9 @@ function chaincodeQueryListLast () {
 	do
 		sleep 3
 		echo_b "Attempting to Query PEER$PEER ...$(($(date +%s)-starttime)) secs"
-		peer chaincode query -C $CHANNEL_NAME -n mycc -c '{"Args":["query_list","'"$2"'"]}' >&log.txt
+		peer chaincode query -C $CHANNEL_NAME -n mycc -c '{"Args":["list_last","'"$2"'"]}' >&log.txt
 		test $? -eq 0 && VALUE=$(cat log.txt | grep "Query Result:" | cut -f 3- -d " ")
-		IFS=',' tokens=( $VALUE )
-		test ${tokens[-1]} = "$3" && let rc=0
+		test "$VALUE" = "$3" && let rc=0
 	done
 	echo
 	cat log.txt
@@ -389,7 +379,7 @@ function set_list_verify () {
 function insert_list_verify () {
 	PEER=$1
 	insert_list $PEER "$2" "$3"
-	chaincodeQueryListLast $PEER "$2" "$3"
+	verifyLast $PEER "$2" "$3"
 }
 
 function set_verify () {
