@@ -105,12 +105,15 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 	} else if function == "insert_map" {
 		// query a variable and get a string which consists of all the list elements
 		return t.insert_map(stub, args)
+	} else if function == "insert_list" {
+		// query a variable and get a string which consists of all the list elements
+		return t.insert_list(stub, args)
 	} else if function == "map_remove" {
 		// query a variable and get a string which consists of all the list elements
 		return t.map_remove(stub, args)
 	}
 
-	return shim.Error("Invalid invoke function name. Expecting \"invoke\" \"delete\" \"query\" \"set\" \"set_list\" \"query_map_keys\"  \"query_list\" \"query_map_field\" \"insert_map\" \"map_remove\"")
+	return shim.Error("Invalid invoke function name. Expecting \"invoke\" \"delete\" \"query\" \"set\" \"set_list\" \"query_map_keys\"  \"query_list\" \"query_map_field\" \"insert_map\"  \"insert_list\" \"map_remove\"")
 }
 
 func (t *SimpleChaincode) map_remove(stub shim.ChaincodeStubInterface, args []string) pb.Response {
@@ -233,6 +236,79 @@ func (t *SimpleChaincode) insert_map(stub shim.ChaincodeStubInterface, args []st
 
 		// Write the state back to the ledger
 		err = stub.PutState(Map, b2.Bytes())
+		if err != nil {
+			return shim.Error(err.Error())
+		}
+	}
+	return shim.Success(nil)
+}
+
+func (t *SimpleChaincode) insert_list(stub shim.ChaincodeStubInterface, args []string) pb.Response {
+	var List string
+	var Element string
+	var err error
+
+	if len(args) != 2 {
+		return shim.Error("Incorrect number of arguments. Expecting 2")
+	}
+
+	List = args[0]
+	Element = args[1]
+
+	// Get the state from the ledger
+	Listbytes, err := stub.GetState(List)
+	if err != nil {
+		jsonResp := "{\"Error\":\"Failed to get state for " + List + "\"}"
+		return shim.Error(jsonResp)
+	}
+
+	if Listbytes == nil {
+		fmt.Printf("NIL\n")
+		// jsonResp := "{\"Error\":\"Nil amount for " + List + "\"}"
+		// return shim.Error(jsonResp)
+		var NewList []string
+
+		// Add to list
+		NewList = append(NewList, Element)
+		fmt.Printf("%#v\n", NewList)
+
+		b := new(bytes.Buffer)
+		e := gob.NewEncoder(b)
+		// Encoding the map
+		err = e.Encode(NewList)
+		if err != nil {
+			return shim.Error(err.Error())
+		}
+
+		// Write the state back to the ledger
+		err = stub.PutState(List, b.Bytes())
+		if err != nil {
+			return shim.Error(err.Error())
+		}
+	} else {
+		b := bytes.NewBuffer(Listbytes)
+		var decodedList []string
+		d := gob.NewDecoder(b)
+
+		// Decoding the serialized data
+		err = d.Decode(&decodedList)
+		if err != nil {
+			shim.Error(err.Error())
+		}
+		// fmt.Printf("%#v\n", decodedList)
+		// Add to map
+		decodedList = append(decodedList, Element)
+
+		b2 := new(bytes.Buffer)
+		e := gob.NewEncoder(b2)
+		// Encoding the map
+		err = e.Encode(decodedList)
+		if err != nil {
+			return shim.Error(err.Error())
+		}
+
+		// Write the state back to the ledger
+		err = stub.PutState(List, b2.Bytes())
 		if err != nil {
 			return shim.Error(err.Error())
 		}
