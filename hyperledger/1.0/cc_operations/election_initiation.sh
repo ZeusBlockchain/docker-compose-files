@@ -8,7 +8,7 @@ ELECTION_PUBLIC_FILE=proofs/election_public.log.txt
 ZEUS_PUBLIC_FILE=proofs/zeus_public.log.txt
 CRYPTOSYSTEM_FILE=proofs/cryptosystem.log.txt
 ELECTION_FINGERPRINT_FILE=proofs/election_fingerprint.log.txt
-ZEUS_KEY_PROO_FILEF=proofs/zeus_key_proof.log.txt
+ZEUS_KEY_PROOF_FILE=proofs/zeus_key_proof.log.txt
 TRUSTEES_FILE=proofs/trustees.log.txt
 CANDIDATES_FILE=proofs/candidates.log.txt
 ELECTION_REPORT_FILE=proofs/election_report.log.txt
@@ -29,21 +29,21 @@ function add_map_fields () {
 }
 
 ##################### Add election information #####################
-/bin/bash ./cc_operations/set.sh election_public $(cat $ELECTION_PUBLIC_FILE)
+/bin/bash ./cc_operations/set_verify.sh election_public "$(cat $ELECTION_PUBLIC_FILE)"
 
-/bin/bash ./cc_operations/set.sh zeus_public $(cat $ZEUS_PUBLIC_FILE)
+/bin/bash ./cc_operations/set_verify.sh zeus_public "$(cat $ZEUS_PUBLIC_FILE)"
 
-# /bin/bash ./cc_operations/set.sh cryptosystem $(cat $CRYPTOSYSTEM_FILE) # list, for start add it as a string..
+/bin/bash ./cc_operations/set_verify.sh cryptosystem "$(cat $CRYPTOSYSTEM_FILE)" # list, for start add it as a string..
 
-/bin/bash ./cc_operations/set.sh election_fingerprint $(cat $ELECTION_FINGERPRINT_FILE)
+/bin/bash ./cc_operations/set_verify.sh election_fingerprint "$(cat $ELECTION_FINGERPRINT_FILE)"
 
-# /bin/bash ./cc_operations/set.sh zeus_key_proof $(cat $ZEUS_KEY_PROOF_FILE) # list, for start add it as a string..
+/bin/bash ./cc_operations/set_verify.sh zeus_key_proof "$(cat $ZEUS_KEY_PROOF_FILE)" # list, for start add it as a string..
 
 add_map_fields "TRUSTEES" "$TRUSTEES_FILE"
 
-# /bin/bash ./cc_operations/set.sh candidates $(cat $CANDIDATES_FILE) # list, for start add it as a string..
+/bin/bash ./cc_operations/set_verify.sh candidates "$(cat $CANDIDATES_FILE)" # list, for start add it as a string..
 
-# /bin/bash ./cc_operations/set.sh election_report $(cat $ELECTION_REPORT_FILE) # for start add it as a string. Could be a map of maps..
+/bin/bash ./cc_operations/set_verify.sh election_report "$(cat $ELECTION_REPORT_FILE)" # for start add it as a string. Could be a map of maps..
 
 add_map_fields "VOTERS" "$VOTERS_FILE"
 

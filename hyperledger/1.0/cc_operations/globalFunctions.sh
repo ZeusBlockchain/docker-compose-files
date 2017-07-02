@@ -28,19 +28,7 @@ function setGlobals () {
 		else
 			CORE_PEER_ADDRESS=peer1.org2.example.com:7051
 		fi
-	# else # peer 4, 5
- #        CORE_PEER_LOCALMSPID="Org3MSP"
- #        CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org3.example.com/peers/peer0.org3.example.com/tls/ca.crt
- #        CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org3.example.com/users/Admin@org3.example.com/msp
- #        if [ $1 -eq 4 ]; then
- #            CORE_PEER_ADDRESS=peer0.org3.example.com:7051
- #        else
- #            CORE_PEER_ADDRESS=peer1.org3.example.com:7051
- #        fi
     fi
-
-
-
 	# env |grep CORE
 }
 
@@ -59,9 +47,9 @@ function set () {
 	# while 'peer chaincode' command can get the orderer endpoint from the peer (if join was successful),
 	# lets supply it directly as we know it using the "-o" option
 	if [ -z "$CORE_PEER_TLS_ENABLED" -o "$CORE_PEER_TLS_ENABLED" = "false" ]; then
-		peer chaincode invoke -o orderer.example.com:7050 -C $CHANNEL_NAME -n mycc -c '{"Args":["set","'$2'","'$3'"]}' >&log.txt
+		peer chaincode invoke -o orderer.example.com:7050 -C $CHANNEL_NAME -n mycc -c '{"Args":["set","'"$2"'","'"$3"'"]}' >&log.txt
 	else
-		peer chaincode invoke -o orderer.example.com:7050  --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C $CHANNEL_NAME -n mycc -c '{"Args":["set","'$2'","'$3'"]}' >&log.txt
+		peer chaincode invoke -o orderer.example.com:7050  --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C $CHANNEL_NAME -n mycc -c '{"Args":["set","'"$2"'","'"$3"'"]}' >&log.txt
 	fi
 	res=$?
 	cat log.txt
@@ -76,9 +64,9 @@ function map_remove () {
 	# while 'peer chaincode' command can get the orderer endpoint from the peer (if join was successful),
 	# lets supply it directly as we know it using the "-o" option
 	if [ -z "$CORE_PEER_TLS_ENABLED" -o "$CORE_PEER_TLS_ENABLED" = "false" ]; then
-		peer chaincode invoke -o orderer.example.com:7050 -C $CHANNEL_NAME -n mycc -c '{"Args":["map_remove","'$2'","'$3'"]}' >&log.txt
+		peer chaincode invoke -o orderer.example.com:7050 -C $CHANNEL_NAME -n mycc -c '{"Args":["map_remove","'"$2"'","'"$3"'"]}' >&log.txt
 	else
-		peer chaincode invoke -o orderer.example.com:7050  --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C $CHANNEL_NAME -n mycc -c '{"Args":["map_remove","'$2'","'$3'"]}' >&log.txt
+		peer chaincode invoke -o orderer.example.com:7050  --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C $CHANNEL_NAME -n mycc -c '{"Args":["map_remove","'"$2"'","'"$3"'"]}' >&log.txt
 	fi
 	res=$?
 	cat log.txt
@@ -93,9 +81,9 @@ function insert_map () {
 	# while 'peer chaincode' command can get the orderer endpoint from the peer (if join was successful),
 	# lets supply it directly as we know it using the "-o" option
 	if [ -z "$CORE_PEER_TLS_ENABLED" -o "$CORE_PEER_TLS_ENABLED" = "false" ]; then
-		peer chaincode invoke -o orderer.example.com:7050 -C $CHANNEL_NAME -n mycc -c '{"Args":["insert_map","'$2'","'$3'","'$4'"]}' >&log.txt
+		peer chaincode invoke -o orderer.example.com:7050 -C $CHANNEL_NAME -n mycc -c '{"Args":["insert_map","'"$2"'","'"$3"'","'"$4"'"]}' >&log.txt
 	else
-		peer chaincode invoke -o orderer.example.com:7050  --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C $CHANNEL_NAME -n mycc -c '{"Args":["insert_map","'$2'","'$3'","'$4'"]}' >&log.txt
+		peer chaincode invoke -o orderer.example.com:7050  --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C $CHANNEL_NAME -n mycc -c '{"Args":["insert_map","'"$2"'","'"$3"'","'"$4"'"]}' >&log.txt
 	fi
 	res=$?
 	cat log.txt
@@ -110,14 +98,13 @@ function chaincodeQuery () {
     setGlobals $PEER
     local rc=1
     local starttime=$(date +%s)
-
     # continue to poll
     # we either get a successful response, or reach TIMEOUT
     while test "$(($(date +%s)-starttime))" -lt "$TIMEOUT" -a $rc -ne 0
     do
         sleep 3
         echo_b "Attempting to Query PEER$PEER ...$(($(date +%s)-starttime)) secs"
-        peer chaincode query -C $CHANNEL_NAME -n mycc -c '{"Args":["query","'$2'"]}' >&log.txt
+        peer chaincode query -C $CHANNEL_NAME -n mycc -c '{"Args":["query","'"$2"'"]}' >&log.txt
         test $? -eq 0 && VALUE=$(cat log.txt | grep "Query Result:" | cut -f 3- -d " ")
         test "$VALUE" = "$3" && let rc=0
     done
@@ -140,14 +127,13 @@ function chaincodeQueryMap () {
     setGlobals $PEER
     local rc=1
     local starttime=$(date +%s)
-
     # continue to poll
     # we either get a successful response, or reach TIMEOUT
     while test "$(($(date +%s)-starttime))" -lt "$TIMEOUT" -a $rc -ne 0
     do
         sleep 3
         echo_b "Attempting to Query PEER$PEER ...$(($(date +%s)-starttime)) secs"
-        peer chaincode query -C $CHANNEL_NAME -n mycc -c '{"Args":["query_map_keys","'$2'"]}' >&log.txt
+        peer chaincode query -C $CHANNEL_NAME -n mycc -c '{"Args":["query_map_keys","'"$2"'"]}' >&log.txt
         test $? -eq 0 && VALUE=$(cat log.txt | grep "Query Result:" | cut -f 3- -d " ")
         # test "$VALUE" = "$3" && let rc=0
 		IFS=',' read -r -a array1 <<< "$VALUE"
@@ -183,14 +169,13 @@ function chaincodeQueryMapField () {
     setGlobals $PEER
     local rc=1
     local starttime=$(date +%s)
-
     # continue to poll
     # we either get a successful response, or reach TIMEOUT
     while test "$(($(date +%s)-starttime))" -lt "$TIMEOUT" -a $rc -ne 0
     do
         sleep 3
         echo_b "Attempting to Query PEER$PEER ...$(($(date +%s)-starttime)) secs"
-        peer chaincode query -C $CHANNEL_NAME -n mycc -c '{"Args":["query_map_field","'$2'","'$3'"]}' >&log.txt
+        peer chaincode query -C $CHANNEL_NAME -n mycc -c '{"Args":["query_map_field","'"$2"'","'"$3"'"]}' >&log.txt
         test $? -eq 0 && VALUE=$(cat log.txt | grep "Query Result:" | cut -f 3- -d " ")
         test "$VALUE" = "$CORRECTVALUE" && let rc=0
     done
@@ -217,7 +202,7 @@ function chaincodeQueryMapFieldNoVerification () {
     # we either get a successful response, or reach TIMEOUT
 
     echo_b "Attempting to Query PEER$PEER ...$(($(date +%s)-starttime)) secs"
-    peer chaincode query -C $CHANNEL_NAME -n mycc -c '{"Args":["query_map_field","'$2'","'$3'"]}' >&log.txt
+    peer chaincode query -C $CHANNEL_NAME -n mycc -c '{"Args":["query_map_field","'"$2"'","'"$3"'"]}' >&log.txt
     test $? -eq 0 && VALUE=$(cat log.txt | grep "Query Result:" | cut -f 3- -d " ")
     echo
     cat log.txt
@@ -233,7 +218,7 @@ function chaincodeQueryNoVerification () {
     # continue to poll
     # we either get a successful response, or reach TIMEOUT
     echo_b "Attempting to Query PEER$PEER ...$(($(date +%s)-starttime)) secs"
-    peer chaincode query -C $CHANNEL_NAME -n mycc -c '{"Args":["query","'$2'"]}' >&log.txt
+    peer chaincode query -C $CHANNEL_NAME -n mycc -c '{"Args":["query","'"$2"'"]}' >&log.txt
     test $? -eq 0 && VALUE=$(cat log.txt | grep "Query Result:" | cut -f 3- -d " ")
     echo
     cat log.txt
@@ -248,7 +233,7 @@ function chaincodeQueryMapNoVerification () {
     # continue to poll
     # we either get a successful response, or reach TIMEOUT
     echo_b "Attempting to Query PEER$PEER ...$(($(date +%s)-starttime)) secs"
-    peer chaincode query -C $CHANNEL_NAME -n mycc -c '{"Args":["query_map_keys","'$2'"]}' >&log.txt
+    peer chaincode query -C $CHANNEL_NAME -n mycc -c '{"Args":["query_map_keys","'"$2"'"]}' >&log.txt
     test $? -eq 0 && VALUE=$(cat log.txt | grep "Query Result:" | cut -f 3- -d " ")
     echo
     cat log.txt
