@@ -90,10 +90,12 @@ with open('chicken_poll_proofs.json') as data_file:
     f.close()
 
 ################# Mixing Phase #################
-
-    f = open("./proofs/mixes.log.txt","w")
-    f.write(str(proofs['mixes']))
-    f.close()
+    mixes = proofs['mixes']
+    for mix in mixes:
+        for key in mix.keys():
+            f = open("./proofs/mix_"+key+".log.txt","w")
+            f.write(str(mix[key])+"\n")
+            f.close()
 
     f = open("./proofs/trustee_factors.log.txt","w")
     f.write(str(proofs['trustee_factors']))
