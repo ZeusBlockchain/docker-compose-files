@@ -90,12 +90,18 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 	} else if function == "set" {
 		// set a variable with a specified value
 		return t.set(stub, args)
-	} else if function == "query_map_keys" {
+	} else if function == "set_list" {
+		// set a list variable with a specified value
+		return t.set_list(stub, args)
+	}else if function == "query_map_keys" {
 		// query a variable and get a string which consists of all the list elements
 		return t.query_map_keys(stub, args)
 	} else if function == "query_map_field" {
 		// query a variable and get a string which consists of all the list elements
 		return t.query_map_field(stub, args)
+	} else if function == "query_list" {
+		// query a variable and get a string which consists of all the list elements
+		return t.query_list(stub, args)
 	} else if function == "insert_map" {
 		// query a variable and get a string which consists of all the list elements
 		return t.insert_map(stub, args)
@@ -104,7 +110,7 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 		return t.map_remove(stub, args)
 	}
 
-	return shim.Error("Invalid invoke function name. Expecting \"invoke\" \"delete\" \"query\" \"set\" \"query_map_keys\" \"query_map_field\" \"insert_map\" \"map_remove\"")
+	return shim.Error("Invalid invoke function name. Expecting \"invoke\" \"delete\" \"query\" \"set\" \"set_list\" \"query_map_keys\"  \"query_list\" \"query_map_field\" \"insert_map\" \"map_remove\"")
 }
 
 func (t *SimpleChaincode) map_remove(stub shim.ChaincodeStubInterface, args []string) pb.Response {
@@ -290,6 +296,80 @@ func (t *SimpleChaincode) set(stub shim.ChaincodeStubInterface, args []string) p
 	}
 
 	return shim.Success(nil)
+}
+
+func Split(r rune) bool {
+	return r == '[' || r == ',' || r == ']'
+}
+
+func (t *SimpleChaincode) set_list(stub shim.ChaincodeStubInterface, args []string) pb.Response {
+	var A string    // Entity
+	var Aval string // Asset
+	var err error
+
+	if len(args) != 2 {
+		return shim.Error("Incorrect number of arguments. Expecting 2")
+	}
+
+	A = args[0]
+	Aval = args[1]
+
+	// Construct list
+	List := strings.FieldsFunc(Aval, Split)
+
+	b := new(bytes.Buffer)
+	e := gob.NewEncoder(b)
+	// Encoding the list
+	err = e.Encode(List)
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+
+	// Write the state back to the ledger
+	err = stub.PutState(A, b.Bytes())
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+	return shim.Success(nil)
+}
+
+func (t *SimpleChaincode) query_list(stub shim.ChaincodeStubInterface, args []string) pb.Response {
+	var A string    // Entity
+	var Aval string // Asset
+	var err error
+
+	if len(args) != 1 {
+		return shim.Error("Incorrect number of arguments. Expecting 1")
+	}
+
+	A = args[0]
+
+	// Get the state from the ledger
+	Avalbytes, err := stub.GetState(A)
+	if err != nil {
+		jsonResp := "{\"Error\":\"Failed to get state for " + A + "\"}"
+		return shim.Error(jsonResp)
+	}
+
+	if Avalbytes == nil {
+		jsonResp := "{\"Error\":\"Nil amount for " + A + "\"}"
+		return shim.Error(jsonResp)
+	}
+	b := bytes.NewBuffer(Avalbytes)
+	var decodedList []string
+	d := gob.NewDecoder(b)
+
+	// Decoding the serialized data
+	err = d.Decode(&decodedList)
+	if err != nil {
+		shim.Error(err.Error())
+	}
+
+
+	Aval = strings.Join(decodedList[:],",")
+	jsonResp := "{\"Name\":\"" + A + "\",\"Amount\":\"" + string(Avalbytes) + "\"}"
+	fmt.Printf("Query Response:%s\n", jsonResp)
+	return shim.Success([]byte(Aval))
 }
 
 

@@ -41,6 +41,8 @@ function add_map_fields () {
 
 add_map_fields "TRUSTEES" "$TRUSTEES_FILE"
 
+set_list_verify 2 "CANDIDATES" "$(cat $CANDIDATES_FILE)"
+
 /bin/bash ./cc_operations/set_verify.sh candidates "$(cat $CANDIDATES_FILE)" # list, for start add it as a string..
 
 /bin/bash ./cc_operations/set_verify.sh election_report "$(cat $ELECTION_REPORT_FILE)" # for start add it as a string. Could be a map of maps..
