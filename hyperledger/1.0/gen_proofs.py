@@ -98,7 +98,9 @@ with open('chicken_poll_proofs.json') as data_file:
             f.close()
 
     f = open("./proofs/trustee_factors.log.txt","w")
-    f.write(str(proofs['trustee_factors']))
+    trustee_factors = proofs['trustee_factors']
+    for trustee_factor in trustee_factors:
+        f.write(str(trustee_factor)+"\n")
     f.close()
 
 ################### Results ####################

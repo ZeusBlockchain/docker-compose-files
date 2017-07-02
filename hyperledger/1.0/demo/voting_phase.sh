@@ -16,13 +16,13 @@ while read line; do
     /bin/bash ./cc_operations/insert_list_verify.sh "VOTES" "$line"
 done <$VOTES_FILE
 
-/bin/bash ./cc_operations/set_verify.sh audit_requests "$(cat $AUDIT_REQUESTS_FILE)"
+/bin/bash ./cc_operations/set_verify.sh "AUDIT_REQUESTS" "$(cat $AUDIT_REQUESTS_FILE)"
 
-/bin/bash ./cc_operations/set_verify.sh audit_publications "$(cat $AUDIT_PUBLICATIONS_FILE)"
+/bin/bash ./cc_operations/set_verify.sh "AUDIT_PUBLICATIONS" "$(cat $AUDIT_PUBLICATIONS_FILE)"
 
 add_map_fields "CAST_VOTES" "$CAST_VOTES_FILE"
 
-/bin/bash ./cc_operations/set_verify.sh excluded_voters "$(cat $EXCLUDED_VOTERS_FILE)"
+/bin/bash ./cc_operations/set_verify.sh "EXCLUDED_VOTERS" "$(cat $EXCLUDED_VOTERS_FILE)"
 
 
 echo

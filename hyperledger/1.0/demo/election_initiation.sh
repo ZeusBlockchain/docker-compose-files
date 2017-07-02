@@ -17,21 +17,21 @@ VOTER_AUDIT_CODES_FILE=proofs/voter_audit_codes.log.txt
 
 ##################### Add election information #####################
 
-/bin/bash ./cc_operations/set_verify.sh election_public "$(cat $ELECTION_PUBLIC_FILE)"
+/bin/bash ./cc_operations/set_verify.sh "ELECTION_PUBLIC" "$(cat $ELECTION_PUBLIC_FILE)"
 
-/bin/bash ./cc_operations/set_verify.sh zeus_public "$(cat $ZEUS_PUBLIC_FILE)"
+/bin/bash ./cc_operations/set_verify.sh "ZEUS_PUBLIC" "$(cat $ZEUS_PUBLIC_FILE)"
 
-/bin/bash ./cc_operations/set_verify.sh cryptosystem "$(cat $CRYPTOSYSTEM_FILE)" # list, for start add it as a string..
+/bin/bash ./cc_operations/set_verify.sh "CRYPTOSYSTEM" "$(cat $CRYPTOSYSTEM_FILE)" # list, for start add it as a string..
 
-/bin/bash ./cc_operations/set_verify.sh election_fingerprint "$(cat $ELECTION_FINGERPRINT_FILE)"
+/bin/bash ./cc_operations/set_verify.sh "ELECTION_FINGERPRINT" "$(cat $ELECTION_FINGERPRINT_FILE)"
 
-/bin/bash ./cc_operations/set_verify.sh zeus_key_proof "$(cat $ZEUS_KEY_PROOF_FILE)" # list, for start add it as a string..
+/bin/bash ./cc_operations/set_verify.sh "ZEUS_KEY_PROOF" "$(cat $ZEUS_KEY_PROOF_FILE)" # list, for start add it as a string..
 
 add_map_fields "TRUSTEES" "$TRUSTEES_FILE"
 
 set_list_verify 2 "CANDIDATES" "$(cat $CANDIDATES_FILE)"
 
-/bin/bash ./cc_operations/set_verify.sh candidates "$(cat $CANDIDATES_FILE)" # list, for start add it as a string..
+/bin/bash ./cc_operations/set_verify.sh "CANDIDATES" "$(cat $CANDIDATES_FILE)" # list, for start add it as a string..
 
 add_map_fields "ELECTION_REPORT" "$ELECTION_REPORT_FILE"
 

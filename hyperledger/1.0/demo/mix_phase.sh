@@ -48,7 +48,7 @@ do
     done
 done <$MIX_CIPHER_COLLECTIONS_FILE
 
-/bin/bash ./cc_operations/set_verify.sh mix_challenge "$(cat $MIX_CHALLENGE_FILE)"
+/bin/bash ./cc_operations/set_verify.sh "MIX_CHALLENGE" "$(cat $MIX_CHALLENGE_FILE)"
 
 while read line
 do
