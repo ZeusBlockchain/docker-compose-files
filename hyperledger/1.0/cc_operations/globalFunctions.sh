@@ -32,6 +32,20 @@ function setGlobals () {
 	# env |grep CORE
 }
 
+function add_map_field () {
+    echo
+    echo_b "Adding to ""$1"" ""$2"
+    insert_map_verify 2 "$1" "$2" "$3"
+}
+
+function add_map_fields () {
+    while read field; do
+        [ -z "$field" ] && continue
+        IFS=':' tokens=( $field )
+        add_map_field "$1" ${tokens[0]} ${tokens[1]}
+    done <$2
+}
+
 function verifyResult () {
     if [ $1 -ne 0 ] ; then
         echo_b "!!!!!!!!!!!!!!! "$2" !!!!!!!!!!!!!!!!"

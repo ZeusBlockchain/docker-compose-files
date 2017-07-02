@@ -65,7 +65,7 @@ with open('chicken_poll_proofs.json') as data_file:
 ################# Voting Phase #################
     
     f = open("./proofs/votes.log.txt","w")
-    f.write(str(proofs['votes']))
+    f.write(str(proofs['votes']).replace("\\n", "##"))
     f.close()
     
     f = open("./proofs/audit_requests.log.txt","w")

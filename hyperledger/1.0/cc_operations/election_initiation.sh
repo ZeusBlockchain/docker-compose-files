@@ -15,21 +15,8 @@ ELECTION_REPORT_FILE=proofs/election_report.log.txt
 VOTERS_FILE=proofs/voters.log.txt
 VOTER_AUDIT_CODES_FILE=proofs/voter_audit_codes.log.txt
 
-function add_map_field () {
-	echo
-	echo_b "Adding to ""$1"" ""$2"
-	insert_map_verify 2 "$1" "$2" "$3"
-}
-
-function add_map_fields () {
-	while read field; do
-        [ -z "$field" ] && continue
-		IFS=':' tokens=( $field )
-		add_map_field "$1" ${tokens[0]} ${tokens[1]}
-	done <$2
-}
-
 ##################### Add election information #####################
+
 /bin/bash ./cc_operations/set_verify.sh election_public "$(cat $ELECTION_PUBLIC_FILE)"
 
 /bin/bash ./cc_operations/set_verify.sh zeus_public "$(cat $ZEUS_PUBLIC_FILE)"
@@ -53,7 +40,7 @@ add_map_fields "VOTERS" "$VOTERS_FILE"
 add_map_fields "VOTER_AUDIT_CODES" "$VOTER_AUDIT_CODES_FILE"
 
 echo
-echo_g "===================== All GOOD, election initiation completed ===================== "
+echo_g "===================== All GOOD, Election Initiation Phase completed ===================== "
 echo
 
 exit 0
