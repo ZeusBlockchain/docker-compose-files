@@ -38,11 +38,44 @@ function add_map_field () {
     insert_map_verify 2 "$1" "$2" "$3"
 }
 
+function add_map_field_encrypted () {
+    echo
+    echo_b "Adding to ""$1"" ""$2"
+	sha256=$(echo -n "$3" "$4" | sha256sum | head -c 64)
+    # echo 2 "$1" "$2" "$3" "$4"
+    # echo 2 "$1" "$2" "$sha256"
+	insert_map_verify 2 "$1" "$2" "$sha256"
+}
+
+function reveal_encrypted_map_field () {
+    echo
+    echo_b "Adding to ""$1"" ""$2"
+    # echo 2 "$1" "$2" "$3" "$4"
+    # echo 2 "$1" "$2" "$sha256"
+	insert_map_verify 2 "$1" "$2" "$3 $4"
+}
+
 function add_map_fields () {
     while read field; do
         [ -z "$field" ] && continue
         IFS=':' tokens=( $field )
         add_map_field "$1" ${tokens[0]} ${tokens[1]}
+    done <$2
+}
+
+function add_map_fields_encryted () {
+    while read field; do
+        [ -z "$field" ] && continue
+        IFS=':' tokens=( $field )
+        add_map_field_encrypted "$1" ${tokens[0]} ${tokens[1]} ${tokens[2]}
+    done <$2
+}
+
+function reveal_encrypted_map_fields () {
+    while read field; do
+        [ -z "$field" ] && continue
+        IFS=':' tokens=( $field )
+        reveal_encrypted_map_field "$1" ${tokens[0]} ${tokens[1]} ${tokens[2]}
     done <$2
 }
 

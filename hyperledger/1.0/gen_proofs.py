@@ -1,6 +1,9 @@
 from __future__ import print_function
 import json
-import os
+import os, random, string
+
+def random_char(y):
+       return ''.join(random.choice(string.ascii_letters) for x in range(y))
 
 with open('chicken_poll_proofs.json') as data_file:
     proofs = json.load(data_file)
@@ -59,7 +62,8 @@ with open('chicken_poll_proofs.json') as data_file:
     voter_audit_codes = proofs['voter_audit_codes']
     for voter_audit_code, info in voter_audit_codes.items():
         f.write(voter_audit_code+":")
-        f.write(str(info)+"\n")
+        f.write(str(info)+":")
+        f.write(str(random_char(64))+"\n")
     f.close()
 
 ################# Voting Phase #################

@@ -37,7 +37,7 @@ add_map_fields "ELECTION_REPORT" "$ELECTION_REPORT_FILE"
 
 add_map_fields "VOTERS" "$VOTERS_FILE"
 
-add_map_fields "VOTER_AUDIT_CODES" "$VOTER_AUDIT_CODES_FILE"
+add_map_fields_encryted "VOTER_AUDIT_CODES_HASHED" "$VOTER_AUDIT_CODES_FILE"
 
 echo
 echo_g "===================== All GOOD, Election Initiation Phase completed ===================== "
