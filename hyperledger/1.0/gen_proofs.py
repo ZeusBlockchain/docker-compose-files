@@ -90,7 +90,11 @@ with open('chicken_poll_proofs.json') as data_file:
     f.close()
 
     f = open("./proofs/excluded_voters.log.txt","w")
-    f.write(str(proofs['excluded_voters']))
+    # f.write(str(proofs['excluded_voters']))
+    excluded_voters = proofs['excluded_voters']
+    for excluded_voter, info in excluded_voters.items():
+        f.write(excluded_voter+":")
+        f.write(str(info)+"\n")
     f.close()
 
 ################# Mixing Phase #################

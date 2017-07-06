@@ -23,7 +23,11 @@ done <$VOTES_FILE
 add_map_fields "CAST_VOTES" "$CAST_VOTES_FILE"
 
 /bin/bash ./cc_operations/set_verify.sh "EXCLUDED_VOTERS" "$(cat $EXCLUDED_VOTERS_FILE)"
-
+while read field; do
+    [ -z "$field" ] && continue
+    IFS=':' tokens=( $field )
+    map_remove 2 "VOTERS" ${tokens[0]}
+done <$EXCLUDED_VOTERS_FILE
 
 echo
 echo_g "===================== All GOOD, Voting Phase completed ===================== "
