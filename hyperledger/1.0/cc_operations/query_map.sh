@@ -7,10 +7,10 @@ echo_b "Channel name : "$CHANNEL_NAME
 #Query on chaincode on Peer0/Org1
 if [ -z "$2" ]; then
     echo_b "Querying chaincode on org1/peer0..."
-    chaincodeQueryMapKeysNoVerification 2 "$1"
+    chaincodeQueryMapNoVerification 2 "$1"
 else
     echo_b "Querying chaincode on org1/peer0..."
-    chaincodeQueryMapKeys 2 "$1" "$2"
+    chaincodeQueryMap 2 "$1" "$2"
 fi
 
 echo

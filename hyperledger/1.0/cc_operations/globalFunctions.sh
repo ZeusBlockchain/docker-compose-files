@@ -202,7 +202,7 @@ function chaincodeQuery () {
     fi
 }
 
-function chaincodeQueryMap () {
+function chaincodeQueryMapKeys () {
     PEER=$1
 	CORRECTVALUE=$3
     echo_b "===================== Querying on PEER$PEER on channel '$CHANNEL_NAME'... ===================== "
@@ -216,6 +216,48 @@ function chaincodeQueryMap () {
         sleep 3
         echo_b "Attempting to Query PEER$PEER ...$(($(date +%s)-starttime)) secs"
         peer chaincode query -C $CHANNEL_NAME -n mycc -c '{"Args":["query_map_keys","'"$2"'"]}' >&log.txt
+        test $? -eq 0 && VALUE=$(cat log.txt | grep "Query Result:" | cut -f 3- -d " ")
+        # test "$VALUE" = "$3" && let rc=0
+		IFS=',' read -r -a array1 <<< "$VALUE"
+		IFS=',' read -r -a array2 <<< "$CORRECTVALUE"
+		sorted1=( $(
+			for el in "${array1[@]}"
+			do
+				echo "$el"
+			done | sort) )
+		sorted2=( $(
+			for el in "${array2[@]}"
+			do
+				echo "$el"
+			done | sort) )
+		[ "${sorted1[*]}" == "${sorted2[*]}" ] && rc=0 || rc=1
+    done
+    echo
+    cat log.txt
+    if test $rc -eq 0 ; then
+        echo_g "===================== Query on PEER$PEER on channel '$CHANNEL_NAME' is successful ===================== "
+    else
+        echo_r "!!!!!!!!!!!!!!! Query result on PEER$PEER is INVALID !!!!!!!!!!!!!!!!"
+        echo_r "================== ERROR !!! FAILED to execute End-2-End Scenario =================="
+        echo
+        exit 1
+    fi
+}
+
+function chaincodeQueryMap () {
+    PEER=$1
+	CORRECTVALUE=$3
+    echo_b "===================== Querying on PEER$PEER on channel '$CHANNEL_NAME'... ===================== "
+    setGlobals $PEER
+    local rc=1
+    local starttime=$(date +%s)
+    # continue to poll
+    # we either get a successful response, or reach TIMEOUT
+    while test "$(($(date +%s)-starttime))" -lt "$TIMEOUT" -a $rc -ne 0
+    do
+        sleep 3
+        echo_b "Attempting to Query PEER$PEER ...$(($(date +%s)-starttime)) secs"
+        peer chaincode query -C $CHANNEL_NAME -n mycc -c '{"Args":["query_map","'"$2"'"]}' >&log.txt
         test $? -eq 0 && VALUE=$(cat log.txt | grep "Query Result:" | cut -f 3- -d " ")
         # test "$VALUE" = "$3" && let rc=0
 		IFS=',' read -r -a array1 <<< "$VALUE"
@@ -388,7 +430,7 @@ function chaincodeQueryListNoVerification () {
     cat log.txt
 }
 
-function chaincodeQueryMapNoVerification () {
+function chaincodeQueryMapKeysNoVerification () {
     PEER=$1
     echo_b "===================== Querying on PEER$PEER on channel '$CHANNEL_NAME'... ===================== "
     setGlobals $PEER
@@ -398,6 +440,21 @@ function chaincodeQueryMapNoVerification () {
     # we either get a successful response, or reach TIMEOUT
     echo_b "Attempting to Query PEER$PEER ...$(($(date +%s)-starttime)) secs"
     peer chaincode query -C $CHANNEL_NAME -n mycc -c '{"Args":["query_map_keys","'"$2"'"]}' >&log.txt
+    test $? -eq 0 && VALUE=$(cat log.txt | grep "Query Result:" | cut -f 3- -d " ")
+    echo
+    cat log.txt
+}
+
+function chaincodeQueryMapNoVerification () {
+    PEER=$1
+    echo_b "===================== Querying on PEER$PEER on channel '$CHANNEL_NAME'... ===================== "
+    setGlobals $PEER
+    local starttime=$(date +%s)
+
+    # continue to poll
+    # we either get a successful response, or reach TIMEOUT
+    echo_b "Attempting to Query PEER$PEER ...$(($(date +%s)-starttime)) secs"
+    peer chaincode query -C $CHANNEL_NAME -n mycc -c '{"Args":["query_map","'"$2"'"]}' >&log.txt
     test $? -eq 0 && VALUE=$(cat log.txt | grep "Query Result:" | cut -f 3- -d " ")
     echo
     cat log.txt
