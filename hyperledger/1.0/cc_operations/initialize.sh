@@ -21,12 +21,12 @@ echo_b "Channel name : "$CHANNEL_NAME
 createChannel() {
 	setGlobals 0
     if [ -z "$CORE_PEER_TLS_ENABLED" -o "$CORE_PEER_TLS_ENABLED" = "false" ]; then
-		peer channel create -o orderer.example.com:7050 -c $CHANNEL_NAME -f ./channel-artifacts/channel.tx >&log.txt
+		peer --logging-level INFO channel create -o orderer.example.com:7050 -c $CHANNEL_NAME -f ./channel-artifacts/channel.tx >&log.txt
 	else
-		peer channel create -o orderer.example.com:7050 -c $CHANNEL_NAME -f ./channel-artifacts/channel.tx --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA >&log.txt
+		peer --logging-level INFO channel create -o orderer.example.com:7050 -c $CHANNEL_NAME -f ./channel-artifacts/channel.tx --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA >&log.txt
 	fi
 	res=$?
-	cat log.txt
+	cat log.txt | grep --invert-match "INFO"
 	verifyResult $res "Channel creation failed"
 	echo_g "===================== Channel \"$CHANNEL_NAME\" is created successfully ===================== "
 	echo
@@ -37,12 +37,12 @@ updateAnchorPeers() {
     setGlobals $PEER
 
     if [ -z "$CORE_PEER_TLS_ENABLED" -o "$CORE_PEER_TLS_ENABLED" = "false" ]; then
-		peer channel update -o orderer.example.com:7050 -c $CHANNEL_NAME -f ./channel-artifacts/${CORE_PEER_LOCALMSPID}anchors.tx >&log.txt
+		peer --logging-level INFO channel update -o orderer.example.com:7050 -c $CHANNEL_NAME -f ./channel-artifacts/${CORE_PEER_LOCALMSPID}anchors.tx >&log.txt
 	else
-		peer channel update -o orderer.example.com:7050 -c $CHANNEL_NAME -f ./channel-artifacts/${CORE_PEER_LOCALMSPID}anchors.tx --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA >&log.txt
+		peer --logging-level INFO channel update -o orderer.example.com:7050 -c $CHANNEL_NAME -f ./channel-artifacts/${CORE_PEER_LOCALMSPID}anchors.tx --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA >&log.txt
 	fi
 	res=$?
-	cat log.txt
+	cat log.txt | grep --invert-match "INFO"
 	verifyResult $res "Anchor peer update failed"
 	echo_g "===================== Anchor peers for org \"$CORE_PEER_LOCALMSPID\" on \"$CHANNEL_NAME\" is updated successfully ===================== "
 	echo
@@ -50,9 +50,9 @@ updateAnchorPeers() {
 
 ## Sometimes Join takes time hence RETRY atleast for 5 times
 joinWithRetry () {
-	peer channel join -b $CHANNEL_NAME.block  >&log.txt
+	peer --logging-level INFO channel join -b $CHANNEL_NAME.block  >&log.txt
 	res=$?
-	cat log.txt
+	cat log.txt | grep --invert-match "INFO"
 	if [ $res -ne 0 -a $COUNTER -lt $MAX_RETRY ]; then
 		COUNTER=` expr $COUNTER + 1`
 		echo_b "PEER$1 failed to join the channel, Retry after 2 seconds"
@@ -77,9 +77,9 @@ joinChannel () {
 installChaincode () {
 	PEER=$1
 	setGlobals $PEER
-	peer chaincode install -n mycc -v 1.0 -p github.com/hyperledger/fabric/examples/chaincode/go/zeus_chaincode >&log.txt
+	peer --logging-level INFO chaincode install -n mycc -v 1.0 -p github.com/hyperledger/fabric/examples/chaincode/go/zeus_chaincode >&log.txt
 	res=$?
-	cat log.txt
+	cat log.txt | grep --invert-match "INFO"
     verifyResult $res "Chaincode installation on remote peer PEER$PEER has Failed"
 	echo_g "===================== Chaincode is installed on remote peer PEER$PEER ===================== "
 	echo
@@ -91,12 +91,12 @@ instantiateChaincode () {
 	# while 'peer chaincode' command can get the orderer endpoint from the peer (if join was successful),
 	# lets supply it directly as we know it using the "-o" option
 	if [ -z "$CORE_PEER_TLS_ENABLED" -o "$CORE_PEER_TLS_ENABLED" = "false" ]; then
-		peer chaincode instantiate -o orderer.example.com:7050 -C $CHANNEL_NAME -n mycc -v 1.0 -c '{"Args":["init","a","100","b","200"]}' -P "OR	('Org1MSP.member','Org2MSP.member')" >&log.txt
+		peer --logging-level INFO chaincode instantiate -o orderer.example.com:7050 -C $CHANNEL_NAME -n mycc -v 1.0 -c '{"Args":["init","a","100","b","200"]}' -P "OR	('Org1MSP.member','Org2MSP.member')" >&log.txt
 	else
-		peer chaincode instantiate -o orderer.example.com:7050 --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C $CHANNEL_NAME -n mycc -v 1.0 -c '{"Args":["init","a","100","b","200"]}' -P "OR	('Org1MSP.member','Org2MSP.member')" >&log.txt
+		peer --logging-level INFO chaincode instantiate -o orderer.example.com:7050 --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C $CHANNEL_NAME -n mycc -v 1.0 -c '{"Args":["init","a","100","b","200"]}' -P "OR	('Org1MSP.member','Org2MSP.member')" >&log.txt
 	fi
 	res=$?
-	cat log.txt
+	cat log.txt | grep --invert-match "INFO"
 	verifyResult $res "Chaincode instantiation on PEER$PEER on channel '$CHANNEL_NAME' failed"
 	echo_g "===================== Chaincode Instantiation on PEER$PEER on channel '$CHANNEL_NAME' is successful ===================== "
 	echo
