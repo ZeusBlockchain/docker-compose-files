@@ -91,15 +91,15 @@ function verifyResult () {
 function set () {
 	PEER=$1
 	setGlobals $PEER
-	# while 'peer chaincode' command can get the orderer endpoint from the peer (if join was successful),
+	# while 'peer --logging-level INFO chaincode' command can get the orderer endpoint from the peer (if join was successful),
 	# lets supply it directly as we know it using the "-o" option
 	if [ -z "$CORE_PEER_TLS_ENABLED" -o "$CORE_PEER_TLS_ENABLED" = "false" ]; then
-		peer chaincode invoke -o orderer.example.com:7050 -C $CHANNEL_NAME -n mycc -c '{"Args":["set","'"$2"'","'"$3"'"]}' >&log.txt
+		peer --logging-level INFO chaincode invoke -o orderer.example.com:7050 -C $CHANNEL_NAME -n mycc -c '{"Args":["set","'"$2"'","'"$3"'"]}' >&log.txt
 	else
-		peer chaincode invoke -o orderer.example.com:7050  --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C $CHANNEL_NAME -n mycc -c '{"Args":["set","'"$2"'","'"$3"'"]}' >&log.txt
+		peer --logging-level INFO chaincode invoke -o orderer.example.com:7050  --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C $CHANNEL_NAME -n mycc -c '{"Args":["set","'"$2"'","'"$3"'"]}' >&log.txt
 	fi
 	res=$?
-	cat log.txt
+	cat log.txt | grep --invert-match "INFO"
 	verifyResult $res "Invoke execution on PEER$PEER failed "
 	echo_g "===================== Invoke transaction on PEER$PEER on channel '$CHANNEL_NAME' is successful ===================== "
 	echo
@@ -108,15 +108,15 @@ function set () {
 function set_list () {
 	PEER=$1
 	setGlobals $PEER
-	# while 'peer chaincode' command can get the orderer endpoint from the peer (if join was successful),
+	# while 'peer --logging-level INFO chaincode' command can get the orderer endpoint from the peer (if join was successful),
 	# lets supply it directly as we know it using the "-o" option
 	if [ -z "$CORE_PEER_TLS_ENABLED" -o "$CORE_PEER_TLS_ENABLED" = "false" ]; then
-		peer chaincode invoke -o orderer.example.com:7050 -C $CHANNEL_NAME -n mycc -c '{"Args":["set_list","'"$2"'","'"$3"'"]}' >&log.txt
+		peer --logging-level INFO chaincode invoke -o orderer.example.com:7050 -C $CHANNEL_NAME -n mycc -c '{"Args":["set_list","'"$2"'","'"$3"'"]}' >&log.txt
 	else
-		peer chaincode invoke -o orderer.example.com:7050  --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C $CHANNEL_NAME -n mycc -c '{"Args":["set_list","'"$2"'","'"$3"'"]}' >&log.txt
+		peer --logging-level INFO chaincode invoke -o orderer.example.com:7050  --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C $CHANNEL_NAME -n mycc -c '{"Args":["set_list","'"$2"'","'"$3"'"]}' >&log.txt
 	fi
 	res=$?
-	cat log.txt
+	cat log.txt | grep --invert-match "INFO"
 	verifyResult $res "Invoke execution on PEER$PEER failed "
 	echo_g "===================== Invoke transaction on PEER$PEER on channel '$CHANNEL_NAME' is successful ===================== "
 	echo
@@ -126,15 +126,15 @@ function set_list () {
 function map_remove () {
 	PEER=$1
 	setGlobals $PEER
-	# while 'peer chaincode' command can get the orderer endpoint from the peer (if join was successful),
+	# while 'peer --logging-level INFO chaincode' command can get the orderer endpoint from the peer (if join was successful),
 	# lets supply it directly as we know it using the "-o" option
 	if [ -z "$CORE_PEER_TLS_ENABLED" -o "$CORE_PEER_TLS_ENABLED" = "false" ]; then
-		peer chaincode invoke -o orderer.example.com:7050 -C $CHANNEL_NAME -n mycc -c '{"Args":["map_remove","'"$2"'","'"$3"'"]}' >&log.txt
+		peer --logging-level INFO chaincode invoke -o orderer.example.com:7050 -C $CHANNEL_NAME -n mycc -c '{"Args":["map_remove","'"$2"'","'"$3"'"]}' >&log.txt
 	else
-		peer chaincode invoke -o orderer.example.com:7050  --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C $CHANNEL_NAME -n mycc -c '{"Args":["map_remove","'"$2"'","'"$3"'"]}' >&log.txt
+		peer --logging-level INFO chaincode invoke -o orderer.example.com:7050  --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C $CHANNEL_NAME -n mycc -c '{"Args":["map_remove","'"$2"'","'"$3"'"]}' >&log.txt
 	fi
 	res=$?
-	cat log.txt
+	cat log.txt | grep --invert-match "INFO"
 	verifyResult $res "Invoke execution on PEER$PEER failed "
 	echo_g "===================== Invoke transaction on PEER$PEER on channel '$CHANNEL_NAME' is successful ===================== "
 	echo
@@ -143,15 +143,15 @@ function map_remove () {
 function insert_map () {
 	PEER=$1
 	setGlobals $PEER
-	# while 'peer chaincode' command can get the orderer endpoint from the peer (if join was successful),
+	# while 'peer --logging-level INFO chaincode' command can get the orderer endpoint from the peer (if join was successful),
 	# lets supply it directly as we know it using the "-o" option
 	if [ -z "$CORE_PEER_TLS_ENABLED" -o "$CORE_PEER_TLS_ENABLED" = "false" ]; then
-		peer chaincode invoke -o orderer.example.com:7050 -C $CHANNEL_NAME -n mycc -c '{"Args":["insert_map","'"$2"'","'"$3"'","'"$4"'"]}' >&log.txt
+		peer --logging-level INFO chaincode invoke -o orderer.example.com:7050 -C $CHANNEL_NAME -n mycc -c '{"Args":["insert_map","'"$2"'","'"$3"'","'"$4"'"]}' >&log.txt
 	else
-		peer chaincode invoke -o orderer.example.com:7050  --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C $CHANNEL_NAME -n mycc -c '{"Args":["insert_map","'"$2"'","'"$3"'","'"$4"'"]}' >&log.txt
+		peer --logging-level INFO chaincode invoke -o orderer.example.com:7050  --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C $CHANNEL_NAME -n mycc -c '{"Args":["insert_map","'"$2"'","'"$3"'","'"$4"'"]}' >&log.txt
 	fi
 	res=$?
-	cat log.txt
+	cat log.txt | grep --invert-match "INFO"
 	verifyResult $res "Invoke execution on PEER$PEER failed "
 	echo_g "===================== Invoke transaction on PEER$PEER on channel '$CHANNEL_NAME' is successful ===================== "
 	echo
@@ -160,15 +160,15 @@ function insert_map () {
 function insert_list () {
 	PEER=$1
 	setGlobals $PEER
-	# while 'peer chaincode' command can get the orderer endpoint from the peer (if join was successful),
+	# while 'peer --logging-level INFO chaincode' command can get the orderer endpoint from the peer (if join was successful),
 	# lets supply it directly as we know it using the "-o" option
 	if [ -z "$CORE_PEER_TLS_ENABLED" -o "$CORE_PEER_TLS_ENABLED" = "false" ]; then
-		peer chaincode invoke -o orderer.example.com:7050 -C $CHANNEL_NAME -n mycc -c '{"Args":["insert_list","'"$2"'","'"$3"'"]}' >&log.txt
+		peer --logging-level INFO chaincode invoke -o orderer.example.com:7050 -C $CHANNEL_NAME -n mycc -c '{"Args":["insert_list","'"$2"'","'"$3"'"]}' >&log.txt
 	else
-		peer chaincode invoke -o orderer.example.com:7050  --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C $CHANNEL_NAME -n mycc -c '{"Args":["insert_list","'"$2"'","'"$3"'"]}' >&log.txt
+		peer --logging-level INFO chaincode invoke -o orderer.example.com:7050  --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C $CHANNEL_NAME -n mycc -c '{"Args":["insert_list","'"$2"'","'"$3"'"]}' >&log.txt
 	fi
 	res=$?
-	cat log.txt
+	cat log.txt | grep --invert-match "INFO"
 	verifyResult $res "Invoke execution on PEER$PEER failed "
 	echo_g "===================== Invoke transaction on PEER$PEER on channel '$CHANNEL_NAME' is successful ===================== "
 	echo
@@ -186,12 +186,12 @@ function chaincodeQuery () {
     do
         sleep 3
         echo_b "Attempting to Query PEER$PEER ...$(($(date +%s)-starttime)) secs"
-        peer chaincode query -C $CHANNEL_NAME -n mycc -c '{"Args":["query","'"$2"'"]}' >&log.txt
+        peer --logging-level INFO chaincode query -C $CHANNEL_NAME -n mycc -c '{"Args":["query","'"$2"'"]}' >&log.txt
         test $? -eq 0 && VALUE=$(cat log.txt | grep "Query Result:" | cut -f 3- -d " ")
         test "$VALUE" = "$3" && let rc=0
     done
     echo
-    cat log.txt
+    cat log.txt | grep --invert-match "INFO"
     if test $rc -eq 0 ; then
         echo_g "===================== Query on PEER$PEER on channel '$CHANNEL_NAME' is successful ===================== "
     else
@@ -215,7 +215,7 @@ function chaincodeQueryMapKeys () {
     do
         sleep 3
         echo_b "Attempting to Query PEER$PEER ...$(($(date +%s)-starttime)) secs"
-        peer chaincode query -C $CHANNEL_NAME -n mycc -c '{"Args":["query_map_keys","'"$2"'"]}' >&log.txt
+        peer --logging-level INFO chaincode query -C $CHANNEL_NAME -n mycc -c '{"Args":["query_map_keys","'"$2"'"]}' >&log.txt
         test $? -eq 0 && VALUE=$(cat log.txt | grep "Query Result:" | cut -f 3- -d " ")
         # test "$VALUE" = "$3" && let rc=0
 		IFS=',' read -r -a array1 <<< "$VALUE"
@@ -233,7 +233,7 @@ function chaincodeQueryMapKeys () {
 		[ "${sorted1[*]}" == "${sorted2[*]}" ] && rc=0 || rc=1
     done
     echo
-    cat log.txt
+    cat log.txt | grep --invert-match "INFO"
     if test $rc -eq 0 ; then
         echo_g "===================== Query on PEER$PEER on channel '$CHANNEL_NAME' is successful ===================== "
     else
@@ -257,7 +257,7 @@ function chaincodeQueryMap () {
     do
         sleep 3
         echo_b "Attempting to Query PEER$PEER ...$(($(date +%s)-starttime)) secs"
-        peer chaincode query -C $CHANNEL_NAME -n mycc -c '{"Args":["query_map","'"$2"'"]}' >&log.txt
+        peer --logging-level INFO chaincode query -C $CHANNEL_NAME -n mycc -c '{"Args":["query_map","'"$2"'"]}' >&log.txt
         test $? -eq 0 && VALUE=$(cat log.txt | grep "Query Result:" | cut -f 3- -d " ")
         # test "$VALUE" = "$3" && let rc=0
 		IFS=',' read -r -a array1 <<< "$VALUE"
@@ -275,7 +275,7 @@ function chaincodeQueryMap () {
 		[ "${sorted1[*]}" == "${sorted2[*]}" ] && rc=0 || rc=1
     done
     echo
-    cat log.txt
+    cat log.txt | grep --invert-match "INFO"
     if test $rc -eq 0 ; then
         echo_g "===================== Query on PEER$PEER on channel '$CHANNEL_NAME' is successful ===================== "
     else
@@ -299,12 +299,12 @@ function chaincodeQueryMapField () {
     do
         sleep 3
         echo_b "Attempting to Query PEER$PEER ...$(($(date +%s)-starttime)) secs"
-        peer chaincode query -C $CHANNEL_NAME -n mycc -c '{"Args":["query_map_field","'"$2"'","'"$3"'"]}' >&log.txt
+        peer --logging-level INFO chaincode query -C $CHANNEL_NAME -n mycc -c '{"Args":["query_map_field","'"$2"'","'"$3"'"]}' >&log.txt
         test $? -eq 0 && VALUE=$(cat log.txt | grep "Query Result:" | cut -f 3- -d " ")
         test "$VALUE" = "$CORRECTVALUE" && let rc=0
     done
     echo
-    cat log.txt
+    cat log.txt | grep --invert-match "INFO"
     if test $rc -eq 0 ; then
         echo_g "===================== Query on PEER$PEER on channel '$CHANNEL_NAME' is successful ===================== "
     else
@@ -323,10 +323,10 @@ function chaincodeQueryMapFieldNoVerification () {
     local starttime=$(date +%s)
 
     echo_b "Attempting to Query PEER$PEER ...$(($(date +%s)-starttime)) secs"
-    peer chaincode query -C $CHANNEL_NAME -n mycc -c '{"Args":["query_map_field","'"$2"'","'"$3"'"]}' >&log.txt
+    peer --logging-level INFO chaincode query -C $CHANNEL_NAME -n mycc -c '{"Args":["query_map_field","'"$2"'","'"$3"'"]}' >&log.txt
     test $? -eq 0 && VALUE=$(cat log.txt | grep "Query Result:" | cut -f 3- -d " ")
     echo
-    cat log.txt
+    cat log.txt | grep --invert-match "INFO"
 }
 
 
@@ -337,10 +337,10 @@ function chaincodeQueryNoVerification () {
     local starttime=$(date +%s)
 
     echo_b "Attempting to Query PEER$PEER ...$(($(date +%s)-starttime)) secs"
-    peer chaincode query -C $CHANNEL_NAME -n mycc -c '{"Args":["query","'"$2"'"]}' >&log.txt
+    peer --logging-level INFO chaincode query -C $CHANNEL_NAME -n mycc -c '{"Args":["query","'"$2"'"]}' >&log.txt
     test $? -eq 0 && VALUE=$(cat log.txt | grep "Query Result:" | cut -f 3- -d " ")
     echo
-    cat log.txt
+    cat log.txt | grep --invert-match "INFO"
 }
 
 function chaincodeQueryList () {
@@ -353,13 +353,13 @@ function chaincodeQueryList () {
 	do
 		sleep 3
 		echo_b "Attempting to Query PEER$PEER ...$(($(date +%s)-starttime)) secs"
-		peer chaincode query -C $CHANNEL_NAME -n mycc -c '{"Args":["query_list","'"$2"'"]}' >&log.txt
+		peer --logging-level INFO chaincode query -C $CHANNEL_NAME -n mycc -c '{"Args":["query_list","'"$2"'"]}' >&log.txt
 		test $? -eq 0 && VALUE=$(cat log.txt | grep "Query Result:" | cut -f 3- -d " ")
 		test "$VALUE" = "$3" && let rc=0
 		test "[$VALUE]" = "$3" && let rc=0
 	done
 	echo
-	cat log.txt
+	cat log.txt | grep --invert-match "INFO"
 	if test $rc -eq 0 ; then
 		echo_g "===================== Query on PEER$PEER on channel '$CHANNEL_NAME' is successful ===================== "
 	else
@@ -377,10 +377,10 @@ function inList () {
 	local rc=1
     local starttime=$(date +%s)
 	echo_b "Attempting to Query PEER$PEER ...$(($(date +%s)-starttime)) secs"
-	peer chaincode query -C $CHANNEL_NAME -n mycc -c '{"Args":["in_list","'"$2"'","'"$3"'"]}' >&log.txt
+	peer --logging-level INFO chaincode query -C $CHANNEL_NAME -n mycc -c '{"Args":["in_list","'"$2"'","'"$3"'"]}' >&log.txt
 	test $? -eq 0 && VALUE=$(cat log.txt | grep "Query Result:" | cut -f 3- -d " ")
 	test "$VALUE" = "true" && let rc=0
-	cat log.txt
+	cat log.txt | grep --invert-match "INFO"
 	if test $rc -eq 0 ; then
 		echo_g "===================== Query on PEER$PEER on channel '$CHANNEL_NAME' is successful ===================== "
 	else
@@ -401,12 +401,12 @@ function verifyLast () {
 	do
 		sleep 3
 		echo_b "Attempting to Query PEER$PEER ...$(($(date +%s)-starttime)) secs"
-		peer chaincode query -C $CHANNEL_NAME -n mycc -c '{"Args":["list_last","'"$2"'"]}' >&log.txt
+		peer --logging-level INFO chaincode query -C $CHANNEL_NAME -n mycc -c '{"Args":["list_last","'"$2"'"]}' >&log.txt
 		test $? -eq 0 && VALUE=$(cat log.txt | grep "Query Result:" | cut -f 3- -d " ")
 		test "$VALUE" = "$3" && let rc=0
 	done
 	echo
-	cat log.txt
+	cat log.txt | grep --invert-match "INFO"
 	if test $rc -eq 0 ; then
 		echo_g "===================== Query on PEER$PEER on channel '$CHANNEL_NAME' is successful ===================== "
 	else
@@ -424,10 +424,10 @@ function chaincodeQueryListNoVerification () {
     local starttime=$(date +%s)
 
     echo_b "Attempting to Query PEER$PEER ...$(($(date +%s)-starttime)) secs"
-    peer chaincode query -C $CHANNEL_NAME -n mycc -c '{"Args":["query_list","'"$2"'"]}' >&log.txt
+    peer --logging-level INFO chaincode query -C $CHANNEL_NAME -n mycc -c '{"Args":["query_list","'"$2"'"]}' >&log.txt
     test $? -eq 0 && VALUE=$(cat log.txt | grep "Query Result:" | cut -f 3- -d " ")
     echo
-    cat log.txt
+    cat log.txt | grep --invert-match "INFO"
 }
 
 function chaincodeQueryMapKeysNoVerification () {
@@ -439,10 +439,10 @@ function chaincodeQueryMapKeysNoVerification () {
     # continue to poll
     # we either get a successful response, or reach TIMEOUT
     echo_b "Attempting to Query PEER$PEER ...$(($(date +%s)-starttime)) secs"
-    peer chaincode query -C $CHANNEL_NAME -n mycc -c '{"Args":["query_map_keys","'"$2"'"]}' >&log.txt
+    peer --logging-level INFO chaincode query -C $CHANNEL_NAME -n mycc -c '{"Args":["query_map_keys","'"$2"'"]}' >&log.txt
     test $? -eq 0 && VALUE=$(cat log.txt | grep "Query Result:" | cut -f 3- -d " ")
     echo
-    cat log.txt
+    cat log.txt | grep --invert-match "INFO"
 }
 
 function chaincodeQueryMapNoVerification () {
@@ -454,10 +454,10 @@ function chaincodeQueryMapNoVerification () {
     # continue to poll
     # we either get a successful response, or reach TIMEOUT
     echo_b "Attempting to Query PEER$PEER ...$(($(date +%s)-starttime)) secs"
-    peer chaincode query -C $CHANNEL_NAME -n mycc -c '{"Args":["query_map","'"$2"'"]}' >&log.txt
+    peer --logging-level INFO chaincode query -C $CHANNEL_NAME -n mycc -c '{"Args":["query_map","'"$2"'"]}' >&log.txt
     test $? -eq 0 && VALUE=$(cat log.txt | grep "Query Result:" | cut -f 3- -d " ")
     echo
-    cat log.txt
+    cat log.txt | grep --invert-match "INFO"
 }
 
 function set_list_verify () {
