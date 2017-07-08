@@ -5,7 +5,7 @@ source cc_operations/globalFunctions.sh
 echo_b "Channel name : "$CHANNEL_NAME
 
 if [ "$#" -ne 3 ]; then
-	echo_r "=========================== Usage: insert_map_verify list key value =========================== "
+	echo_r "=========================== Usage: insert_map_verify map key value =========================== "
     echo_r "e.g. insert_map_verify VOTERS voterID voterDetails"
     exit 1
 fi
