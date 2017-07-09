@@ -59,7 +59,11 @@ function add_map_fields () {
     while read field; do
         [ -z "$field" ] && continue
         IFS=':' tokens=( $field )
-        add_map_field "$1" ${tokens[0]} ${tokens[1]}
+        if [ -z "${tokens[2]}" ] ; then
+            add_map_field "$1" ${tokens[0]} ${tokens[1]}
+        else
+            add_map_field "$1" ${tokens[0]} ${tokens[1]}":"${tokens[2]}
+        fi
     done <$2
 }
 
